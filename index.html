@@ -9,15 +9,35 @@
 </head>
 <body>
     <div class="kiosk-container">
-        <div class="header">
-            <div class="logo-placeholder">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        
+        <div class="header-logos">
+            <div class="logo-box">
+                <img src="logo/luwu.png" alt="Logo Kabupaten Luwu" class="img-logo">
             </div>
-            <h1>Mal Pelayanan Publik</h1>
-            <h2>Kabupaten Luwu</h2>
+            <div class="header-titles">
+                <h1>Mal Pelayanan Publik</h1>
+                <h2>Pemerintah Kabupaten Luwu</h2>
+            </div>
+            <div class="logo-box">
+                <img src="logo/mpp.png" alt="Logo MPP" class="img-logo">
+            </div>
         </div>
 
-        <div id="step-1" class="step active">
+        <div id="step-0" class="step active">
+            <div class="intro-box">
+                <h3 style="color: var(--primary); margin-bottom: 20px; font-size: 20px;">Tujuan Survei Kepuasan Masyarakat</h3>
+                <p style="margin-bottom: 12px; line-height: 1.6; color: var(--text-muted); font-size: 15px;">Survei ini bertujuan untuk memperoleh gambaran secara objektif mengenai kepuasan masyarakat terhadap pelayanan publik di MPP Kabupaten Luwu.</p>
+                <ul style="text-align: left; margin-bottom: 24px; padding-left: 20px; color: var(--text-muted); font-size: 14px; line-height: 1.8;">
+                    <li>Nilai yang diberikan diharapkan objektif dan dapat dipertanggungjawabkan.</li>
+                    <li>Hasil survei digunakan untuk bahan penyusunan evaluasi pelayanan publik.</li>
+                    <li>Data diri dan keterangan yang diberikan dijamin kerahasiaannya.</li>
+                    <li>Survei ini tidak memiliki keterkaitan dengan Pajak ataupun Politik.</li>
+                </ul>
+                <button class="btn btn-submit" onclick="goToStep(1)" style="width: 100%;">Mulai Mengisi Survei</button>
+            </div>
+        </div>
+
+        <div id="step-1" class="step">
             <p class="question-text">Silakan lengkapi data diri Anda</p>
             <div class="form-group">
                 <input type="text" id="input-nama" class="input-text" placeholder="Nama Lengkap">
@@ -53,7 +73,10 @@
                     <option value="Lainnya">Lainnya</option>
                 </select>
             </div>
-            <button class="btn btn-submit" onclick="validasiBiodata()" style="width: 100%; margin-top: 16px;">Lanjut Tahap Berikutnya</button>
+            <div class="action-buttons">
+                <button class="btn btn-back" onclick="goToStep(0)">Kembali</button>
+                <button class="btn btn-submit" onclick="validasiBiodata()">Lanjut</button>
+            </div>
         </div>
 
         <div id="step-2" class="step">
@@ -87,15 +110,21 @@
             </div>
             <div class="action-buttons">
                 <button class="btn btn-back" onclick="goToStep(1)">Kembali</button>
-                <button class="btn btn-submit" onclick="validasiLayanan()">Mulai Survei</button>
+                <button class="btn btn-submit" onclick="validasiLayanan()">Lanjut Kuesioner</button>
             </div>
         </div>
 
         <div id="step-3" class="step">
             <div class="progress-bar-container"><div id="progress-bar"></div></div>
             <p class="sub-text" id="teks-indikator"></p>
-            <p class="question-text" id="teks-pertanyaan"></p>
-            <div class="rating-container" id="area-bintang">
+            <p class="question-text" id="teks-pertanyaan" style="min-height: 70px;"></p>
+            
+            <div class="options-grid" id="area-opsi-jawaban">
+            </div>
+
+            <div class="action-buttons" style="margin-top: 32px;">
+                <button class="btn btn-back" onclick="mundurPertanyaan()">Kembali</button>
+                <button class="btn btn-submit" onclick="lanjutPertanyaan()">Lanjut</button>
             </div>
         </div>
 
@@ -106,7 +135,8 @@
             </p>
             <textarea id="input-saran" rows="5" placeholder="Ketik di sini..."></textarea>
             <div class="action-buttons">
-                <button class="btn btn-submit" id="btn-kirim" onclick="submitSurvey()" style="width: 100%;">Kirim Penilaian SKM</button>
+                <button class="btn btn-back" onclick="kembaliKePertanyaanTerakhir()">Kembali</button>
+                <button class="btn btn-submit" id="btn-kirim" onclick="submitSurvey()">Kirim Survei</button>
             </div>
         </div>
 
@@ -114,10 +144,27 @@
             <div class="success-icon">
                 <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
             </div>
-            <h1 class="text-success">Terima Kasih</h1>
-            <p class="question-text" style="color: #64748b; font-size: 16px; margin-top: 8px;">Masukan Anda telah aman tersimpan di sistem kami.</p>
+            <h1 class="text-success">Terima Kasih!</h1>
+            <p class="question-text" style="color: #64748b; font-size: 16px; margin-top: 8px;">Penilaian Anda sangat berarti untuk kemajuan pelayanan kami.</p>
+            <button class="btn btn-back" onclick="resetSurvey()" style="width: 100%; margin-top: 24px; border: 2px solid var(--text-border);">Selesai & Tutup</button>
         </div>
     </div>
     <script src="script.js"></script>
+<script>   
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+    document.onkeydown = function(e) {
+        if (e.keyCode === 123) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && (e.keyCode === 'I'.charCodeAt(0) || e.keyCode === 'J'.charCodeAt(0) || e.keyCode === 'C'.charCodeAt(0))) {
+            return false;
+        }
+        if (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0)) {
+            return false;
+        }
+    };
+</script>
 </body>
 </html>
