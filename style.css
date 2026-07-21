@@ -298,8 +298,37 @@ textarea { resize: none; padding: 20px; }
 }
 
 @media (max-width: 600px) {
-    .kiosk-container { padding: 24px 20px; }
-    .options-grid { grid-template-columns: 1fr; gap: 12px; }
-    .header-logos { flex-direction: column; gap: 16px; border-bottom: none; padding-bottom: 0; }
-    .logo-box { display: none; }
+    .kiosk-container { padding: 24px 16px; }
+
+    .header-logos {
+        flex-direction: row;
+        justify-content: center;
+        gap: 12px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #F1F5F9;
+        flex-wrap: wrap;
+    }
+
+    .logo-box {
+        display: flex;
+        width: 50px;
+        height: auto;
+    }
+
+    .img-logo {
+        max-height: 50px;
+    }
+
+    .header-titles h1 {
+        font-size: 18px;
+    }
+
+    .header-titles h2 {
+        font-size: 11px;
+    }
+
+    .options-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
 }
