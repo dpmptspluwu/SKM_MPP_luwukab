@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Tahunan SKM - MPP Luwu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary: #1E3A8A;
+            --primary-light: #3b82f6;
+            --gold: #B8860B;
+            --bg: #F4F7FE;
+            --surface: #FFFFFF;
+            --text: #111827;
+            --muted: #6B7280;
+            --border: #E5E7EB;
+            --radius: 16px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        body {
+            background: #E8ECF4;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 1100px;
+            width: 100%;
+        }
+        .btn-area {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .btn-area select,
+        .btn-area button {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            background: white;
+            cursor: pointer;
+        }
+        .btn-cetak {
+            background: #1E3A8A !important;
+            color: white !important;
+            border: none !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+        }
+        .btn-cetak:hover {
+            background: #1D4ED8 !important;
+            transform: translateY(-2px);
+        }
+
+        #area-cetak {
+            background: white;
+            padding: 50px 55px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            min-height: 297mm;
+        }
+        .kop {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding-bottom: 24px;
+            border-bottom: 3px solid #1E3A8A;
+            margin-bottom: 30px;
+        }
+        .kop img {
+            width: 70px;
+            height: auto;
+        }
+        .kop-text {
+            text-align: center;
+        }
+        .kop-text h1 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1E3A8A;
+            margin-bottom: 2px;
+            letter-spacing: -0.3px;
+        }
+        .kop-text h2 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .kop-text p {
+            font-size: 11px;
+            color: #94A3B8;
+            margin-top: 2px;
+        }
+        .judul-laporan {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .judul-laporan h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #0F172A;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .judul-laporan .tahun {
+            display: inline-block;
+            background: #1E3A8A;
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        .kpi-card {
+            background: #F8FAFC;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #E2E8F0;
+            transition: transform 0.2s;
+        }
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        .kpi-card .label {
+            font-size: 11px;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .kpi-card .value {
+            font-size: 30px;
+            font-weight: 800;
+            color: #0F172A;
+        }
+        .kpi-card .value.blue {
+            color: #1E40AF;
+        }
+        .badge-mutu {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E3A8A;
+            margin-bottom: 16px;
+            padding-left: 14px;
+            border-left: 4px solid #3b82f6;
+        }
+        .chart-box {
+            background: #F8FAFC;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #E2E8F0;
+            height: 300px;
+        }
+        .chart-box.pendek {
+            height: 280px;
+        }
+        .unsur-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #F8FAFC;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #E2E8F0;
+        }
+        .unsur-table th {
+            background: #1E3A8A;
+            color: white;
+            padding: 14px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+        .unsur-table td {
+            padding: 12px 16px;
+            font-size: 13px;
+            border-bottom: 1px solid #E2E8F0;
+            text-align: center;
+            font-weight: 500;
+        }
+        .unsur-table td:first-child {
+            font-weight: 700;
+            color: #1E3A8A;
+        }
+        .unsur-table td:nth-child(2) {
+            text-align: left;
+        }
+        .unsur-table .nilai {
+            font-weight: 700;
+        }
+        .unsur-table tfoot td {
+            font-weight: 800;
+            background: #EFF6FF;
+            color: #1E40AF;
+        }
+        .ttd-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid #E2E8F0;
+        }
+        .ttd-box {
+            text-align: center;
+            width: 220px;
+        }
+        .ttd-box .jabatan {
+            font-size: 12px;
+            color: #64748B;
+            font-weight: 600;
+            margin-bottom: 60px;
+        }
+        .ttd-box .nama {
+            font-size: 14px;
+            font-weight: 800;
+            color: #0F172A;
+        }
+        .ttd-box .nip {
+            font-size: 11px;
+            color: #94A3B8;
+            margin-top: 4px;
+        }
+        .catatan {
+            font-size: 10px;
+            color: #94A3B8;
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #E2E8F0;
+        }
+        @media (max-width: 768px) {
+            .kpi-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            #area-cetak {
+                padding: 30px 20px;
+            }
+            .kop {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        @media (max-width: 480px) {
+            .kpi-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="btn-area">
+            <select id="pilih-tahun" onchange="loadData()">
+                <option value="">Pilih Tahun</option>
+            </select>
+            <button class="btn-cetak" onclick="cetakPDF()">Cetak PDF</button>
+        </div>
+
+        <div id="area-cetak">
+            <div class="kop">
+                <img src="logo/luwu.png" alt="Logo Luwu" onerror="this.style.display='none'">
+                <div class="kop-text">
+                    <h1>PEMERINTAH KABUPATEN LUWU</h1>
+                    <h2>Mal Pelayanan Publik</h2>
+                    <p>Jl. Jenderal Sudirman No. 1, Belopa, Kabupaten Luwu, Sulawesi Selatan</p>
+                </div>
+                <img src="logo/mpp.png" alt="Logo MPP" onerror="this.style.display='none'">
+            </div>
+
+            <div class="judul-laporan">
+                <h3>Laporan Survei Kepuasan Masyarakat</h3>
+                <div class="tahun" id="label-tahun">2026</div>
+            </div>
+
+            <div class="kpi-row">
+                <div class="kpi-card">
+                    <div class="label">Total Responden</div>
+                    <div class="value" id="total-responden">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label">IKM Rata-rata</div>
+                    <div class="value blue" id="ikm-rata">0.00</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label">Mutu Pelayanan</div>
+                    <div class="badge-mutu" id="badge-mutu">-</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label">Gerai Terbaik</div>
+                    <div class="value" style="font-size:14px; line-height:1.3;" id="gerai-terbaik">-</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Tren Nilai IKM per Bulan</div>
+                <div class="chart-box"><canvas id="chartBulanan"></canvas></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Perbandingan IKM per Gerai</div>
+                <div class="chart-box pendek"><canvas id="chartGerai"></canvas></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Rekapitulasi per Unsur Pelayanan</div>
+                <table class="unsur-table">
+                    <thead><tr><th>No</th><th>Unsur Pelayanan</th><th>Nilai Rata-rata</th><th>Mutu</th></tr></thead>
+                    <tbody id="unsur-body"></tbody>
+                    <tfoot id="unsur-footer"></tfoot>
+                </table>
+            </div>
+
+            <div class="ttd-section">
+                <div class="ttd-box">
+                    <div class="jabatan">Belopa, <span id="tgl-ttd"></span><br>Kepala DPMPTSP Kab. Luwu</div>
+                    <div class="nama">NAMA PEJABAT</div>
+                    <div class="nip">NIP. ............................</div>
+                </div>
+            </div>
+            <div class="catatan">Dokumen ini digenerate otomatis oleh Sistem Informasi SKM MPP Kabupaten Luwu</div>
+        </div>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzF4rwH5n9TZPdj_Li56nOSqs8YROXTiTeU3oxA934Fyk1H46ZJEIZmBalvIc2dQ0jA/exec';
+        const TOKEN_KEY = 'admin_token';
+        let dataMentah = [];
+        let chartBulanan = null;
+        let chartGerai = null;
+
+        const namaUnsur = [
+            "Kesesuaian persyaratan pelayanan",
+            "Kemudahan prosedur pelayanan",
+            "Kecepatan waktu pelayanan",
+            "Kewajaran biaya/tarif",
+            "Kesesuaian produk pelayanan",
+            "Kompetensi petugas pelayanan",
+            "Perilaku, kesopanan, keramahan petugas",
+            "Kualitas sarana dan prasarana",
+            "Penanganan pengaduan pengguna layanan"
+        ];
+
+        function getToken() { return localStorage.getItem(TOKEN_KEY); }
+
+        window.onload = function() {
+            const token = getToken();
+            if (!token) {
+                alert('Silakan login di dashboard admin terlebih dahulu untuk mengakses laporan.');
+                return;
+            }
+            isiPilihanTahun();
+            setTanggalTTD();
+            loadData();
+        };
+
+        function setTanggalTTD() {
+            const now = new Date();
+            const bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            document.getElementById('tgl-ttd').innerText = now.getDate() + ' ' + bulan[now.getMonth()] + ' ' + now.getFullYear();
+        }
+
+        function isiPilihanTahun() {
+            const sekarang = new Date().getFullYear();
+            const select = document.getElementById('pilih-tahun');
+            for (let t = sekarang; t >= sekarang - 5; t--) {
+                select.innerHTML += '<option value="' + t + '">Tahun ' + t + '</option>';
+            }
+            select.value = sekarang;
+            document.getElementById('label-tahun').innerText = sekarang;
+        }
+
+        function loadData() {
+            const token = getToken();
+            if (!token) return;
+            fetch(scriptURL + '?action=data&token=' + encodeURIComponent(token))
+                .then(res => res.json())
+                .then(d => {
+                    if (d.status === 'sukses') {
+                        dataMentah = d.data;
+                        renderSemua();
+                    }
+                });
+        }
+
+        function parseTanggal(str) {
+            if (!str) return new Date(NaN);
+            let d = new Date(str);
+            if (!isNaN(d.getTime())) return d;
+            const parts = str.split(' ');
+            if (parts.length >= 1) {
+                const dp = parts[0].split('/'),
+                    tp = (parts[1] || '00:00:00').split(':');
+                if (dp.length === 3) return new Date(parseInt(dp[2]), parseInt(dp[1]) - 1, parseInt(dp[0]), parseInt(tp[0]) || 0, parseInt(
+                    tp[1]) || 0, parseInt(tp[2]) || 0);
+            }
+            return new Date(NaN);
+        }
+
+        function hitungIndeks(arr) {
+            const clean = arr.filter(n => !isNaN(n) && n > 0);
+            if (clean.length === 0) return 0;
+            return (clean.reduce((a, b) => a + b, 0) / 9) * 25;
+        }
+
+        function evaluasiMutu(n) {
+            if (n >= 88.31) return { mutu: 'A', teks: 'Sangat Baik', warna: '#047857', bg: '#D1FAE5' };
+            if (n >= 76.61) return { mutu: 'B', teks: 'Baik', warna: '#1D4ED8', bg: '#DBEAFE' };
+            if (n >= 65.00) return { mutu: 'C', teks: 'Kurang Baik', warna: '#B45309', bg: '#FEF3C7' };
+            if (n > 0) return { mutu: 'D', teks: 'Tidak Baik', warna: '#B91C1C', bg: '#FEE2E2' };
+            return { mutu: '-', teks: 'Tidak Valid', warna: '#475569', bg: '#F1F5F9' };
+        }
+
+        function renderSemua() {
+            const tahun = parseInt(document.getElementById('pilih-tahun').value);
+            document.getElementById('label-tahun').innerText = tahun;
+
+            const dataTahun = dataMentah.filter(row => {
+                const tgl = parseTanggal(row['Tanggal']);
+                return tgl.getFullYear() === tahun;
+            });
+
+            if (dataTahun.length === 0) {
+                document.getElementById('total-responden').innerText = '0';
+                document.getElementById('ikm-rata').innerText = '0.00';
+                document.getElementById('badge-mutu').innerText = '-';
+                document.getElementById('gerai-terbaik').innerText = '-';
+                document.getElementById('unsur-body').innerHTML =
+                    '<tr><td colspan="4" style="text-align:center; padding:20px;">Tidak ada data untuk tahun ini</td></tr>';
+                return;
+            }
+
+            let totalIndeks = 0;
+            let perBulan = new Array(12).fill(0).map(() => ({ total: 0, count: 0 }));
+            let perGerai = {};
+            let perUnsur = new Array(9).fill(0).map(() => []);
+
+            dataTahun.forEach(row => {
+                const nilaiArr = row['Nilai SKM'] ? row['Nilai SKM'].toString().split(',').map(Number) : [];
+                const indeks = hitungIndeks(nilaiArr);
+                totalIndeks += indeks;
+
+                const tgl = parseTanggal(row['Tanggal']);
+                const bulan = tgl.getMonth();
+                perBulan[bulan].total += indeks;
+                perBulan[bulan].count++;
+
+                const gerai = row['Layanan'] || 'Tidak Diketahui';
+                if (!perGerai[gerai]) perGerai[gerai] = { total: 0, count: 0 };
+                perGerai[gerai].total += indeks;
+                perGerai[gerai].count++;
+
+                nilaiArr.forEach((v, i) => {
+                    if (i < 9 && !isNaN(v) && v > 0) perUnsur[i].push(v);
+                });
+            });
+
+            const totalResponden = dataTahun.length;
+            const ikmRata = totalIndeks / totalResponden;
+            const mutu = evaluasiMutu(ikmRata);
+
+            document.getElementById('total-responden').innerText = totalResponden;
+            document.getElementById('ikm-rata').innerText = ikmRata.toFixed(2);
+            const badge = document.getElementById('badge-mutu');
+            badge.innerText = mutu.mutu + ' - ' + mutu.teks;
+            badge.style.background = mutu.bg;
+            badge.style.color = mutu.warna;
+
+            let geraiTerbaik = '-',
+                skorMax = 0;
+            for (const [g, d] of Object.entries(perGerai)) {
+                const rata = d.total / d.count;
+                if (rata > skorMax) { skorMax = rata;
+                    geraiTerbaik = g; }
+            }
+            document.getElementById('gerai-terbaik').innerText = geraiTerbaik;
+
+            renderChartBulanan(perBulan);
+            renderChartGerai(perGerai);
+            renderUnsur(perUnsur);
+        }
+
+        function renderChartBulanan(perBulan) {
+            const ctx = document.getElementById('chartBulanan').getContext('2d');
+            if (chartBulanan) chartBulanan.destroy();
+            const labelBulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            const dataBulan = perBulan.map(b => b.count > 0 ? (b.total / b.count).toFixed(2) : 0);
+            chartBulanan = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labelBulan,
+                    datasets: [{ label: 'IKM', data: dataBulan, backgroundColor: '#3b82f6', borderRadius: 8,
+                        barThickness: 32 }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 100, grid: { color: '#E2E8F0' } }, x: { grid: {
+                                display: false } } }
+                }
+            });
+        }
+
+        function renderChartGerai(perGerai) {
+            const ctx = document.getElementById('chartGerai').getContext('2d');
+            if (chartGerai) chartGerai.destroy();
+            const labels = [],
+                data = [];
+            for (const [g, d] of Object.entries(perGerai)) {
+                labels.push(g.length > 25 ? g.substring(0, 25) + '...' : g);
+                data.push((d.total / d.count).toFixed(2));
+            }
+            chartGerai = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets: [{ label: 'IKM', data, backgroundColor: '#10b981', borderRadius: 6,
+                        barThickness: 24 }] },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true, max: 100, grid: { color: '#E2E8F0' } }, y: { grid: {
+                                display: false } } }
+                }
+            });
+        }
+
+        function renderUnsur(perUnsur) {
+            const tbody = document.getElementById('unsur-body');
+            const tfoot = document.getElementById('unsur-footer');
+            tbody.innerHTML = '';
+            let totalUnsur = 0,
+                countUnsur = 0;
+
+            perUnsur.forEach((arr, i) => {
+                if (arr.length > 0) {
+                    const rata = arr.reduce((a, b) => a + b, 0) / arr.length;
+                    const indeks = rata * 25;
+                    const mutu = evaluasiMutu(indeks);
+                    tbody.innerHTML += '<tr><td>' + (i + 1) + '</td><td style="text-align:left;">' + namaUnsur[
+                        i] + '</td><td class="nilai">' + indeks.toFixed(2) + '</td><td class="nilai" style="color:' +
+                        mutu.warna + '; font-weight:700;">' + mutu.teks + '</td></tr>';
+                    totalUnsur += indeks;
+                    countUnsur++;
+                } else {
+                    tbody.innerHTML += '<tr><td>' + (i + 1) + '</td><td style="text-align:left;">' + namaUnsur[
+                        i] + '</td><td class="nilai">-</td><td class="nilai">-</td></tr>';
+                }
+            });
+
+            const rataUnsur = countUnsur > 0 ? totalUnsur / countUnsur : 0;
+            const mutuUnsur = evaluasiMutu(rataUnsur);
+            tfoot.innerHTML = '<tr><td colspan="2" style="text-align:right;">RATA-RATA KESELURUHAN</td><td class="nilai">' +
+                rataUnsur.toFixed(2) + '</td><td class="nilai" style="color:' + mutuUnsur.warna + ';">' + mutuUnsur
+                .teks + '</td></tr>';
+        }
+
+        function cetakPDF() {
+            const element = document.getElementById('area-cetak');
+            const opt = {
+                margin: [0, 0, 0, 0],
+                filename: 'Laporan_Tahunan_SKM_MPP_Luwu.pdf',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak: { mode: ['css', 'legacy'] }
+            };
+            html2pdf().from(element).set(opt).save();
+        }
+    </script>
+</body>
+</html>
