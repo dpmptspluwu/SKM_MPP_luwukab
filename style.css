@@ -1,0 +1,259 @@
+:root {
+    --primary: #1E3A8A;
+    --primary-light: #3b82f6;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --bg-color: #F8F9FC;
+    --surface: #ffffff;
+    --text-main: #0F172A;
+    --text-muted: #475569;
+    --text-border: #E2E8F0;
+    --radius-lg: 20px;
+    --radius-md: 12px;
+    --shadow-premium: 0 10px 30px rgba(30, 58, 138, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-color);
+    background-image: radial-gradient(circle at top right, #e0e7ff 0%, transparent 40%),
+                      radial-gradient(circle at bottom left, #dbeafe 0%, transparent 40%);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: var(--text-main);
+    padding: 20px;
+}
+
+.kiosk-container {
+    background-color: var(--surface);
+    width: 100%;
+    max-width: 600px;
+    padding: 40px 32px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-premium);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    text-align: center;
+}
+
+.header { margin-bottom: 32px; }
+
+.logo-placeholder {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--primary), #1D4ED8);
+    color: white;
+    border-radius: 14px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
+    box-shadow: 0 8px 16px rgba(30, 58, 138, 0.2);
+}
+
+.header h1 {
+    color: var(--primary);
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 0 4px 0;
+    letter-spacing: -0.5px;
+}
+
+.header h2 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.question-text {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 20px;
+    color: var(--text-main);
+}
+
+.sub-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary-light);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.step {
+    display: none;
+    animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.step.active { display: block; }
+
+@keyframes slideUpFade {
+    0% { opacity: 0; transform: translateY(15px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.form-group {
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.input-text, .input-select, textarea {
+    width: 100%;
+    padding: 16px 20px;
+    border: 1.5px solid var(--text-border);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
+    background-color: #F1F5F9;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.input-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 20px;
+}
+
+.input-text:focus, .input-select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    background-color: var(--surface);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.input-text::placeholder, textarea::placeholder { color: #94A3B8; font-weight: 500; }
+.input-select:invalid, .input-select option[value=""] { color: #94A3B8; }
+
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background-color: var(--text-border);
+    border-radius: 4px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+#progress-bar {
+    height: 100%;
+    background-color: var(--primary-light);
+    width: 0%;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rating-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.btn-rating {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.btn-rating svg {
+    width: 48px;
+    height: 48px;
+    fill: var(--text-border);
+    transition: all 0.3s ease;
+}
+
+.rating-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-top: 10px;
+    transition: color 0.3s ease;
+}
+
+.btn-rating:active { transform: scale(0.9); }
+.btn-rating:active svg { fill: var(--warning); filter: drop-shadow(0 4px 8px rgba(245, 158, 11, 0.3)); }
+.btn-rating:active .rating-label { color: var(--warning); }
+
+textarea { resize: none; padding: 20px; }
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.btn-submit, .btn-back {
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-submit {
+    flex: 2;
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15);
+}
+
+.btn-submit:hover { background: #1D4ED8; }
+.btn-submit:disabled { background: var(--text-muted); box-shadow: none; cursor: not-allowed; }
+
+.btn-back {
+    flex: 1;
+    background: var(--text-border);
+    color: var(--text-main);
+}
+
+.success-icon {
+    color: var(--success);
+    margin-bottom: 20px;
+    animation: popIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.text-success {
+    color: var(--success);
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 480px) {
+    .kiosk-container { padding: 32px 20px; }
+    .btn-rating svg { width: 38px; height: 38px; }
+    .rating-label { font-size: 10px; }
+    .question-text { font-size: 16px; }
+    .input-text, .input-select, textarea { padding: 14px 16px; font-size: 14px; }
+}
