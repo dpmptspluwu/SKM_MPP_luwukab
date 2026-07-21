@@ -93,6 +93,11 @@ body {
     border: 1px solid var(--text-border);
 }
 
+.intro-box p,
+.intro-box ul {
+    text-align: justify;
+}
+
 .question-text {
     font-size: 18px;
     font-weight: 700;
@@ -298,7 +303,9 @@ textarea { resize: none; padding: 20px; }
 }
 
 @media (max-width: 600px) {
-    .kiosk-container { padding: 24px 16px; }
+    .kiosk-container {
+        padding: 24px 16px;
+    }
 
     .header-logos {
         flex-direction: row;
@@ -319,6 +326,10 @@ textarea { resize: none; padding: 20px; }
         max-height: 50px;
     }
 
+    .header-titles {
+        padding: 0 12px;
+    }
+
     .header-titles h1 {
         font-size: 18px;
     }
@@ -327,8 +338,29 @@ textarea { resize: none; padding: 20px; }
         font-size: 11px;
     }
 
+    .intro-box p,
+    .intro-box ul {
+        text-align: justify;
+    }
+
     .options-grid {
         grid-template-columns: 1fr;
         gap: 12px;
+    }
+
+    .btn-option {
+        padding: 14px 16px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn-back {
+        order: 2;
+    }
+
+    .btn-submit {
+        order: 1;
     }
 }
