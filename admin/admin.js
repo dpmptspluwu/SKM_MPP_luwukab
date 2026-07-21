@@ -1,4 +1,4 @@
-const scriptURL = 'MASUKKAN_URL_APPS_SCRIPT_BOS_DI_SINI';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbzF4rwH5n9TZPdj_Li56nOSqs8YROXTiTeU3oxA934Fyk1H46ZJEIZmBalvIc2dQ0jA/exec';
 
 let dataGlobal = [];
 
