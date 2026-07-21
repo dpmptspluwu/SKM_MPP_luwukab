@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SKM - MPP Kabupaten Luwu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="kiosk-container">
+        <div class="header-logos">
+            <div class="logo-box">
+                <img src="logo/luwu.png" alt="Logo Kabupaten Luwu" class="img-logo">
+            </div>
+            <div class="header-titles">
+                <h1>Mal Pelayanan Publik</h1>
+                <h2>Pemerintah Kabupaten Luwu</h2>
+            </div>
+            <div class="logo-box">
+                <img src="logo/mpp.png" alt="Logo MPP" class="img-logo">
+            </div>
+        </div>
+
+        <div id="step-0" class="step active">
+            <div class="intro-box">
+                <h3 style="color: var(--primary); margin-bottom: 20px; font-size: 20px;">Tujuan Survei Kepuasan Masyarakat</h3>
+                <p style="margin-bottom: 12px; line-height: 1.6; color: var(--text-muted); font-size: 15px;">Survei ini bertujuan untuk memperoleh gambaran secara objektif mengenai kepuasan masyarakat terhadap pelayanan publik di MPP Kabupaten Luwu.</p>
+                <ul style="text-align: left; margin-bottom: 24px; padding-left: 20px; color: var(--text-muted); font-size: 14px; line-height: 1.8;">
+                    <li>Nilai yang diberikan diharapkan objektif dan dapat dipertanggungjawabkan.</li>
+                    <li>Hasil survei digunakan untuk bahan penyusunan evaluasi pelayanan publik.</li>
+                    <li>Data diri dan keterangan yang diberikan dijamin kerahasiaannya.</li>
+                    <li>Survei ini tidak memiliki keterkaitan dengan Pajak ataupun Politik.</li>
+                </ul>
+                <button class="btn btn-submit" onclick="goToStep(1)" style="width: 100%;">Mulai Mengisi Survei</button>
+            </div>
+        </div>
+
+        <div id="step-1" class="step">
+            <p class="question-text">Silakan lengkapi data diri Anda</p>
+            <div class="form-group">
+                <input type="text" id="input-nama" class="input-text" placeholder="Nama Lengkap">
+            </div>
+            <div class="form-group">
+                <input type="number" id="input-usia" class="input-text" placeholder="Usia (Contoh: 35)">
+            </div>
+            <div class="form-group">
+                <select id="input-gender" class="input-select">
+                    <option value="" disabled selected>Pilih Jenis Kelamin</option>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="input-pendidikan" class="input-select">
+                    <option value="" disabled selected>Pilih Pendidikan Terakhir</option>
+                    <option value="SD">SD/Sederajat</option>
+                    <option value="SMP">SMP/Sederajat</option>
+                    <option value="SMA">SMA/Sederajat</option>
+                    <option value="D3">Diploma (D3)</option>
+                    <option value="S1">Sarjana (S1/D4)</option>
+                    <option value="S2/S3">Pascasarjana (S2/S3)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="input-pekerjaan" class="input-select">
+                    <option value="" disabled selected>Pilih Pekerjaan Utama</option>
+                    <option value="PNS/TNI/Polri">PNS / TNI / Polri</option>
+                    <option value="Pegawai Swasta">Pegawai Swasta</option>
+                    <option value="Wiraswasta/Pengusaha">Wiraswasta / Pengusaha</option>
+                    <option value="Pelajar/Mahasiswa">Pelajar / Mahasiswa</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-back" onclick="goToStep(0)">Kembali</button>
+                <button class="btn btn-submit" onclick="validasiBiodata()">Lanjut</button>
+            </div>
+        </div>
+
+        <div id="step-2" class="step">
+            <p class="question-text">Layanan apa yang baru saja Anda kunjungi?</p>
+            <div class="form-group">
+                <select id="input-layanan" class="input-select" style="height: auto;">
+                    <option value="" disabled selected>-- Ketuk untuk Memilih Gerai --</option>
+                    <option value="DISDUKCAPIL">DISDUKCAPIL (Kependudukan & Catatan Sipil)</option>
+                    <option value="SAMSAT">SAMSAT (Pajak & Administrasi Kendaraan)</option>
+                    <option value="BAPENDA">BAPENDA (Pajak & Retribusi Daerah)</option>
+                    <option value="BPJS KESEHATAN">BPJS KESEHATAN (Jaminan Kesehatan Nasional)</option>
+                    <option value="BPJS KETENAGAKERJAAN">BPJS KETENAGAKERJAAN (Perlindungan Tenaga Kerja)</option>
+                    <option value="DPMPTSP">DPMPTSP (Perizinan & Penanaman Modal)</option>
+                    <option value="IMIGRASI">IMIGRASI (Paspor & Dokumen Luar Negeri)</option>
+                    <option value="KPP PRATAMA">KPP PRATAMA (Perpajakan Pajak Pusat)</option>
+                    <option value="BANK SULSELBAR">BANK SULSELBAR (Transaksi & Perbankan Daerah)</option>
+                    <option value="DINAS KESEHATAN">DINAS KESEHATAN (Rekomendasi & Izin Kesehatan)</option>
+                    <option value="DISNAKERTRANS">DISNAKERTRANS (Ketenagakerjaan & Transmigrasi)</option>
+                    <option value="PDAM">PDAM (Pelayanan Air Bersih Daerah)</option>
+                    <option value="DINAS PUTR">DINAS PUTR (Rekomendasi Tata Ruang & PU)</option>
+                    <option value="DINAS PERIKANAN">DINAS PERIKANAN (Izin & Rekomendasi Nelayan)</option>
+                    <option value="KOMINFO">KOMINFO (Layanan Informasi & Digital)</option>
+                    <option value="DINAS SOSIAL">DINAS SOSIAL (Bantuan & Jaminan Sosial)</option>
+                    <option value="KEJAKSAAN NEGERI">KEJAKSAAN NEGERI (Konsultasi & Layanan Hukum)</option>
+                    <option value="BPS">BPS (Data & Statistik Wilayah)</option>
+                    <option value="DEKRANASDA">DEKRANASDA (Kerajinan & UMKM Binaan)</option>
+                    <option value="PT ALIYAH">PT ALIYAH (Sektor Swasta / Mitra Kerja)</option>
+                    <option value="PT NATA ENVINUSA">PT NATA ENVINUSA (Sektor Swasta / Lingkungan)</option>
+                    <option value="HAS INT. CENTER">HAS INT. CENTER (Sektor Swasta / Mitra Luar)</option>
+                </select>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-back" onclick="goToStep(1)">Kembali</button>
+                <button class="btn btn-submit" onclick="validasiLayanan()">Lanjut Kuesioner</button>
+            </div>
+        </div>
+
+        <div id="step-3" class="step">
+            <div class="progress-bar-container"><div id="progress-bar"></div></div>
+            <p class="sub-text" id="teks-indikator"></p>
+            <p class="question-text" id="teks-pertanyaan" style="min-height: 70px;"></p>
+            <div class="options-grid" id="area-opsi-jawaban"></div>
+            <div class="action-buttons" style="margin-top: 32px;">
+                <button class="btn btn-back" onclick="mundurPertanyaan()">Kembali</button>
+                <button class="btn btn-submit" onclick="lanjutPertanyaan()">Lanjut</button>
+            </div>
+        </div>
+
+        <div id="step-4" class="step">
+            <p class="question-text">Saran dan Kritik (Opsional)</p>
+            <p class="sub-text" style="color: var(--text-muted); text-transform: none; font-size: 14px; margin-bottom: 16px;">
+                Tuliskan masukan, kritik, atau apresiasi Anda agar kami dapat terus melayani lebih baik lagi. Kosongkan jika tidak ada.
+            </p>
+            <textarea id="input-saran" rows="5" placeholder="Ketik di sini..."></textarea>
+            <div class="action-buttons">
+                <button class="btn btn-back" onclick="kembaliKePertanyaanTerakhir()">Kembali</button>
+                <button class="btn btn-submit" id="btn-kirim" onclick="submitSurvey()">Kirim Survei</button>
+            </div>
+        </div>
+
+        <div id="step-5" class="step">
+            <div class="success-icon">
+                <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <h1 class="text-success">Terima Kasih!</h1>
+            <p class="question-text" style="color: #64748b; font-size: 16px; margin-top: 8px;">Penilaian Anda sangat berarti untuk kemajuan pelayanan kami.</p>
+            <button class="btn btn-back" onclick="resetSurvey()" style="width: 100%; margin-top: 24px; border: 2px solid var(--text-border);">Selesai & Tutup</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>   
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        document.onkeydown = function(e) {
+            if (e.keyCode === 123) return false;
+            if (e.ctrlKey && e.shiftKey && (e.keyCode === 'I'.charCodeAt(0) || e.keyCode === 'J'.charCodeAt(0) || e.keyCode === 'C'.charCodeAt(0))) return false;
+            if (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0)) return false;
+        };
+    </script>
+</body>
+</html>
