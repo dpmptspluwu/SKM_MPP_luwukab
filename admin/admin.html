@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Command Center SKM - MPP Luwu</title>
+    <title>Dashboard SKM - MPP Luwu</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -36,7 +36,7 @@
         <main class="main-content">
             <header class="topbar">
                 <div class="header-titles">
-                    <h1 class="page-title">Command Center SKM</h1>
+                    <h1 class="page-title">Dashboard SKM</h1>
                     <p class="page-subtitle">Pemantauan Indeks Kepuasan Masyarakat secara Real-Time</p>
                 </div>
                 <div class="header-actions" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
@@ -114,5 +114,21 @@
         </main>
     </div>
     <script src="admin.js"></script>
-</body>
+	<script>    
+		document.addEventListener('contextmenu', function(e) {
+			e.preventDefault();
+		});    
+		document.onkeydown = function(e) {
+			if (e.keyCode === 123) {
+				return false;
+			}
+			if (e.ctrlKey && e.shiftKey && (e.keyCode === 'I'.charCodeAt(0) || e.keyCode === 'J'.charCodeAt(0) || e.keyCode === 'C'.charCodeAt(0))) {
+				return false;
+			}
+			if (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0)) {
+				return false;
+			}
+		};
+	</script>
+  </body>
 </html>
