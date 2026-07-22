@@ -318,7 +318,7 @@ function prosesDataDanRender() {
         const p = evaluasiMutu(idx);
         geraiM[lay].rows.push(`
             <tr>
-                <td style="text-align:center;font-weight:700;color:#6B7280;">${i+1}</td>
+                <td style="text-align:center;font-weight:700;color:#6B7280;">${geraiM[lay].rows.length + 1}</td>
                 <td>${formatTanggalWaktu(r['Tanggal'])}</td>
                 <td>${amanDariXSS(r['Nama'])}<br><span style="font-size:12px;color:#64748B;">${amanDariXSS(r['Pekerjaan'])}</span></td>
                 <td style="text-align:center;font-weight:800;">${idx.toFixed(2)}</td>
