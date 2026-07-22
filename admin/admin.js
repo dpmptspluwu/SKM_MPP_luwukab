@@ -199,6 +199,7 @@ function kunciSistemLogin(errorEl, loginBtn, pwInput) {
 
 function parseTanggal(str) {
     if (!str) return new Date(NaN);
+    str = String(str).trim();
 
     const jsDate = new Date(str);
     if (!isNaN(jsDate.getTime())) {
@@ -206,7 +207,7 @@ function parseTanggal(str) {
     }
 
     const regexISO = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/;
-    const matchISO = String(str).match(regexISO);
+    const matchISO = str.match(regexISO);
     if (matchISO) {
         const [, tahun, bulan, tanggal, jam, menit, detik] = matchISO;
         return new Date(parseInt(tahun, 10), parseInt(bulan, 10) - 1, parseInt(tanggal, 10), parseInt(jam, 10), parseInt(menit, 10), parseInt(detik, 10));
@@ -246,6 +247,7 @@ function tarikDataServer() {
                 dataGlobal = d.data;
                 dataTampil = [...dataGlobal];
                 prosesDataDanRender();
+                loadDataLaporan();
             } else if (d.status === 'unauthorized') {
                 hapusToken();
                 tampilkanLogin();
@@ -465,14 +467,17 @@ function eksporKeExcel() {
 function eksporKePDF() {
     if (!dataTampil.length) { alert('Tidak ada data untuk dicetak.'); return; }
 
-    const tempDiv = document.createElement('div');
-    tempDiv.style.padding = '20px';
-    tempDiv.style.background = '#ffffff';
-    tempDiv.style.color = '#000000';
-    tempDiv.style.fontFamily = 'Arial, sans-serif';
-    tempDiv.style.position = 'absolute';
-    tempDiv.style.left = '-9999px'; 
-    document.body.appendChild(tempDiv);
+    const containerDiv = document.createElement('div');
+    containerDiv.style.position = 'absolute';
+    containerDiv.style.top = '0';
+    containerDiv.style.left = '0';
+    containerDiv.style.width = '100%';
+    containerDiv.style.zIndex = '-9999';
+    containerDiv.style.background = '#ffffff';
+    containerDiv.style.padding = '20px';
+    containerDiv.style.color = '#000000';
+    containerDiv.style.fontFamily = 'Arial, sans-serif';
+    document.body.appendChild(containerDiv);
 
     let html = `
         <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">
@@ -518,23 +523,28 @@ function eksporKePDF() {
         </table>
     `;
 
-    tempDiv.innerHTML = html;
+    containerDiv.innerHTML = html;
 
-    html2pdf().from(tempDiv).set({
+    html2pdf().from(containerDiv).set({
         margin: 10,
         filename: 'Laporan_Rekap_SKM_MPP_Luwu.pdf',
         image: { type: 'jpeg', quality: 1 },
         html2canvas: { scale: 2, logging: false },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } 
     }).save().then(() => {
-        document.body.removeChild(tempDiv);
+        document.body.removeChild(containerDiv);
     });
 }
 
 function isiPilihanTahunLaporan() {
     const select = document.getElementById('pilih-tahun-laporan');
     if (!select) return;
-    const currentYear = new Date().getFullYear();
+    
+    let currentYear = new Date().getFullYear();
+    if (currentYear < 2026) {
+        currentYear = 2026;
+    }
+
     select.innerHTML = '<option value="">Pilih Tahun</option>';
     for (let t = 2026; t <= currentYear; t++) {
         const opt = document.createElement('option');
@@ -557,12 +567,23 @@ function loadDataLaporan() {
     if (!select) return;
     const tahun = parseInt(select.value);
 
+    const tbody = document.getElementById('lp-unsur-body');
+
     if (isNaN(tahun)) {
-        alert('Silakan pilih tahun terlebih dahulu.');
+        if (tbody) {
+            document.getElementById('lp-total').innerText = '0';
+            document.getElementById('lp-ikm').innerText = '0.00';
+            document.getElementById('lp-gerai').innerText = '-';
+            const badge = document.getElementById('lp-badge');
+            if (badge) {
+                badge.innerText = '-';
+                badge.style.background = '#F1F5F9';
+                badge.style.color = '#475569';
+            }
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:#6B7280;">Silakan pilih tahun di atas.</td></tr>';
+        }
         return;
     }
-
-    const tbody = document.getElementById('lp-unsur-body');
     
     if (dataGlobal && dataGlobal.length > 0) {
         renderLaporan(dataGlobal, tahun);
@@ -587,21 +608,23 @@ function loadDataLaporan() {
 function renderLaporan(data, tahun) {
     const filtered = data.filter(r => { const t = parseTanggal(r['Tanggal']); return !isNaN(t) && t.getFullYear() === tahun; });
     if (!filtered.length) {
-    document.getElementById('lp-total').innerText = '0';
-    document.getElementById('lp-ikm').innerText = '0.00';
-    const badge = document.getElementById('lp-badge');
-    badge.innerText = '-';
-    badge.style.background = '#F1F5F9';
-    badge.style.color = '#475569';
-    document.getElementById('lp-gerai').innerText = '-';
-    document.getElementById('lp-unsur-body').innerHTML =
-        '<tr><td colspan="4" style="text-align:center;padding:20px;">Belum ada data survei untuk tahun ' + tahun + '.</td></tr>';
-    return;
-}
+        document.getElementById('lp-total').innerText = '0';
+        document.getElementById('lp-ikm').innerText = '0.00';
+        const badge = document.getElementById('lp-badge');
+        badge.innerText = '-';
+        badge.style.background = '#F1F5F9';
+        badge.style.color = '#475569';
+        document.getElementById('lp-gerai').innerText = '-';
+        document.getElementById('lp-unsur-body').innerHTML =
+            '<tr><td colspan="4" style="text-align:center;padding:20px;">Belum ada data survei untuk tahun ' + tahun + '.</td></tr>';
+        return;
+    }
+    
     let totalI = 0;
     const perBulan = Array(12).fill().map(() => ({ total: 0, count: 0 }));
     const perGerai = {};
     const perUnsur = Array(9).fill().map(() => []);
+    
     filtered.forEach(r => {
         const arr = r['Nilai SKM'] ? String(r['Nilai SKM']).split(',').map(Number) : [];
         const idx = hitungIndeks(arr);
@@ -613,15 +636,18 @@ function renderLaporan(data, tahun) {
         perGerai[gr].total += idx; perGerai[gr].count++;
         arr.forEach((v, i) => { if (i < 9 && !isNaN(v) && v > 0) perUnsur[i].push(v); });
     });
+    
     const totalR = filtered.length, ikm = totalI / totalR, mutu = evaluasiMutu(ikm);
     document.getElementById('lp-total').innerText = totalR;
     document.getElementById('lp-ikm').innerText = ikm.toFixed(2);
     const badge = document.getElementById('lp-badge');
     badge.innerText = mutu.mutu + ' - ' + mutu.teks;
     badge.style.background = mutu.bg; badge.style.color = mutu.warna;
+    
     let gb = '-', sm = 0;
     for (const [g, d] of Object.entries(perGerai)) { const rata = d.total / d.count; if (rata > sm) { sm = rata; gb = g; } }
     document.getElementById('lp-gerai').innerText = gb;
+    
     renderChartBulanan(perBulan);
     renderChartGerai(perGerai);
     renderUnsur(perUnsur);
@@ -677,11 +703,24 @@ function cetakPDFLaporan() {
     const clone = el.cloneNode(true);
     clone.querySelectorAll('.no-print').forEach(n => n.remove());
     clone.style.padding = '20px';
+    clone.style.background = '#ffffff';
+
+    const containerDiv = document.createElement('div');
+    containerDiv.style.position = 'absolute';
+    containerDiv.style.top = '0';
+    containerDiv.style.left = '0';
+    containerDiv.style.width = '100%';
+    containerDiv.style.zIndex = '-9999';
+    containerDiv.appendChild(clone);
+    document.body.appendChild(containerDiv);
+
     html2pdf().from(clone).set({
         margin: 5,
         filename: 'Laporan_Tahunan_SKM_MPP_Luwu.pdf',
         image: { type: 'jpeg', quality: 1 },
         html2canvas: { scale: 2, backgroundColor: '#ffffff' },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    }).save();
+    }).save().then(() => {
+        document.body.removeChild(containerDiv);
+    });
 }
