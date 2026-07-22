@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cetak Barcode Premium - MPP Luwu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <link rel="stylesheet" href="barcode.css">
+</head>
+<body>
+
+    <div class="admin-controls no-print">
+        <h2>Cetak Barcode per Gerai</h2>
+        
+        <select id="pilih-gerai" class="select-gerai" onchange="buatBarcode()">
+            <option value="" disabled selected>-- Pilih Gerai Layanan --</option>
+        </select>
+        
+        <div class="kontrol-grup">
+            <div class="slider-box">
+                <label>Orientasi Akrilik/Kertas:</label>
+                <select id="pilih-orientasi" class="select-gerai" onchange="ubahOrientasi()">
+                    <option value="portrait">Vertikal (Berdiri)</option>
+                    <option value="landscape">Horizontal (Mendatar)</option>
+                </select>
+            </div>
+            <div class="slider-box">
+                <label>Skala Ukuran: <span id="angka-skala">100</span>%</label>
+                <input type="range" id="input-skala" min="50" max="100" value="100" oninput="ubahSkala()">
+            </div>
+        </div>
+
+        <button class="btn-print" onclick="window.print()">Cetak Barcode Ini</button>
+    </div>
+
+    <div class="frame-wrapper" id="bingkai-cetak">
+        <div class="frame-premium">
+            
+            <div class="frame-header">
+                <img src="../logo/luwu.png" alt="Logo Luwu" class="logo-img">
+                <div class="header-text">
+                    <h1>PEMERINTAH KABUPATEN LUWU</h1>
+                    <p>Mal Pelayanan Publik (MPP)</p>
+                </div>
+                <img src="../logo/mpp.png" alt="Logo MPP" class="logo-img">
+            </div>
+
+            <div class="frame-body">
+                <div class="label-survei">Survei Kepuasan Masyarakat</div>
+                <h2 id="nama-gerai-tampil">PILIH GERAI DI ATAS</h2>
+                
+                <div class="body-content">
+                    <div class="tujuan-teks">
+                        Survei ini bertujuan untuk memperoleh gambaran secara objektif mengenai kepuasan Anda. 
+                        Penilaian Anda sangat berarti bagi kami untuk mengevaluasi dan terus meningkatkan kualitas pelayanan publik di Kabupaten Luwu.
+                    </div>
+                    
+                    <div class="qr-box">
+                        <canvas id="qr-canvas"></canvas>
+                    </div>
+                    
+                    <div class="instruksi-box">
+                        <h3>Cara Mengisi Survei:</h3>
+                        <ol>
+                            <li>Buka aplikasi <strong>Kamera</strong> atau <strong>Scanner</strong> di HP Anda.</li>
+                            <li>Arahkan kamera ke gambar <strong>Barcode</strong>.</li>
+                            <li>Ketuk <strong>Tautan (Link)</strong> yang muncul.</li>
+                            <li>Isi survei layanan dengan objektif.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="barcode.js"></script>
+</body>
+</html>
