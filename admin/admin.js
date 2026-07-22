@@ -414,7 +414,7 @@ function loadDataLaporan() {
             tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:#6B7280;">Belum ada data survei untuk tahun ' + tahun + '.</td></tr>';
         }
     }
-}}
+}
 
 function renderLaporan(data, tahun) {
     const filtered = data.filter(r => { const t = parseTanggal(r['Tanggal']); return !isNaN(t) && t.getFullYear() === tahun; });
