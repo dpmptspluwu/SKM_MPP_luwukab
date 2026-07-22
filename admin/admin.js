@@ -101,13 +101,7 @@ function logout() {
     if (navDashboard) navDashboard.classList.add('active');
 }
 
-// [DOKUMENTASI KODE]
-// Fungsi Login yang ditingkatkan dengan standar Enterprise:
-// 1. Loading State (Mencegah klik ganda)
-// 2. Anti-Spam/Brute Force (Mengunci sistem setelah 3x gagal)
-// 3. UX Halus (Mengosongkan input jika salah)
 async function cobaLogin() {
-    // Jika sistem sedang menghukum/mengunci pengguna, hentikan aksi
     if (waktuTerkunci) return; 
 
     const pwInput = document.getElementById('login-password');
@@ -117,7 +111,6 @@ async function cobaLogin() {
     if (!pwInput || !errorEl || !loginBtn) return;
     const pw = pwInput.value.trim();
 
-    // Validasi kosong
     if (!pw) {
         errorEl.textContent = 'Silakan masukkan kata sandi Anda.';
         errorEl.style.display = 'block';
@@ -125,7 +118,6 @@ async function cobaLogin() {
         return;
     }
 
-    // --- MULAI EFEK LOADING ---
     errorEl.style.display = 'none';
     const teksAsli = loginBtn.innerText;
     loginBtn.innerText = 'Memverifikasi...';
@@ -143,31 +135,27 @@ async function cobaLogin() {
         const data = await res.json();
 
         if (data.status === 'sukses' && data.token) {
-            // LOGIN BERHASIL
-            percobaanGagal = 0; // Reset hitungan kegagalan
-            pwInput.value = ''; // Bersihkan kolom sandi
+            percobaanGagal = 0;
+            pwInput.value = ''; 
             setToken(data.token);
             sembunyikanLogin();
             tarikDataServer();
         } else {
-            // LOGIN GAGAL
             percobaanGagal++;
-            pwInput.value = ''; // Kosongkan input otomatis
+            pwInput.value = ''; 
             
             if (percobaanGagal >= 3) {
-                // HUKUMAN: Kunci sistem jika gagal 3x
                 kunciSistemLogin(errorEl, loginBtn, pwInput);
             } else {
                 errorEl.textContent = (data.pesan || 'Kata sandi salah.') + ` (Sisa percobaan: ${3 - percobaanGagal})`;
                 errorEl.style.display = 'block';
-                pwInput.focus(); // Kembalikan kursor ke input
+                pwInput.focus();
             }
         }
     } catch (e) {
         errorEl.textContent = 'Gagal terhubung ke server keamanan. Periksa koneksi internet Anda.';
         errorEl.style.display = 'block';
     } finally {
-        // --- SELESAI EFEK LOADING ---
         if (!waktuTerkunci) {
             loginBtn.innerText = teksAsli;
             loginBtn.style.opacity = '1';
@@ -178,32 +166,26 @@ async function cobaLogin() {
     }
 }
 
-// [DOKUMENTASI KODE]
-// Fungsi khusus untuk mengunci halaman login (Timer Hitung Mundur)
 function kunciSistemLogin(errorEl, loginBtn, pwInput) {
     waktuTerkunci = true;
-    let sisaWaktu = 30; // Lama waktu penguncian dalam detik (Bisa Bos ubah)
+    let sisaWaktu = 30; 
     
-    // Matikan tombol dan input
     pwInput.disabled = true;
     loginBtn.disabled = true;
     loginBtn.style.opacity = '0.5';
     loginBtn.style.cursor = 'not-allowed';
     
-    // Jalankan timer mundur setiap 1 detik (1000 milidetik)
     const hitungMundur = setInterval(() => {
         errorEl.innerHTML = `⚠️ <b>Akses Dibekukan Sementara</b><br>Terlalu banyak percobaan gagal. Silakan coba lagi dalam <b>${sisaWaktu} detik</b>.`;
         errorEl.style.display = 'block';
-        errorEl.style.color = '#B91C1C'; // Warna merah tegas
+        errorEl.style.color = '#B91C1C';
         sisaWaktu--;
         
-        // Jika waktu habis, buka kembali kuncinya
         if (sisaWaktu < 0) {
             clearInterval(hitungMundur);
             waktuTerkunci = false;
-            percobaanGagal = 0; // Reset kesempatan
+            percobaanGagal = 0; 
             
-            // Nyalakan kembali tampilan
             pwInput.disabled = false;
             loginBtn.disabled = false;
             loginBtn.innerText = 'Masuk';
@@ -215,19 +197,14 @@ function kunciSistemLogin(errorEl, loginBtn, pwInput) {
     }, 1000);
 }
 
-// [DOKUMENTASI KODE]
-// Fungsi ini bertugas mengubah teks tanggal dari server menjadi objek Date JavaScript.
-// Pembaruan: Menambahkan penanganan otomatis format Date bawaan JS/ISO 8601.
 function parseTanggal(str) {
     if (!str) return new Date(NaN);
 
-    // 1. Coba baca menggunakan pembacaan bawaan JavaScript (Solusi untuk format Google Sheets)
     const jsDate = new Date(str);
     if (!isNaN(jsDate.getTime())) {
         return jsDate;
     }
 
-    // 2. Fallback untuk format manual: "yyyy-MM-dd HH:mm:ss"
     const regexISO = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/;
     const matchISO = String(str).match(regexISO);
     if (matchISO) {
@@ -235,7 +212,6 @@ function parseTanggal(str) {
         return new Date(parseInt(tahun, 10), parseInt(bulan, 10) - 1, parseInt(tanggal, 10), parseInt(jam, 10), parseInt(menit, 10), parseInt(detik, 10));
     }
 
-    // 3. Fallback untuk format tanggal tanpa jam: "yyyy-MM-dd"
     const regexISODate = /^(\d{4})-(\d{2})-(\d{2})$/;
     const matchISODate = String(str).match(regexISODate);
     if (matchISODate) {
@@ -243,7 +219,6 @@ function parseTanggal(str) {
         return new Date(parseInt(tahun, 10), parseInt(bulan, 10) - 1, parseInt(tanggal, 10));
     }
 
-    // 4. Fallback terakhir untuk format lama: "dd/MM/yyyy HH:mm:ss"
     const parts = String(str).split(' ');
     if (parts.length >= 1) {
         const dp = parts[0].split('/');
@@ -253,7 +228,6 @@ function parseTanggal(str) {
         }
     }
 
-    // Jika semua format gagal, kembalikan status tidak valid
     return new Date(NaN);
 }
 
@@ -321,9 +295,8 @@ function prosesDataDanRender() {
     const tfoot = document.getElementById('table-footer');
     
     if (!accordionContainer || !tfoot) return;
-    accordionContainer.innerHTML = ''; // Kosongkan wadah sebelumnya
+    accordionContainer.innerHTML = ''; 
 
-    // Langkah 1: Kelompokkan data per Gerai
     dataTampil.forEach((r, i) => {
         const arr = r['Nilai SKM'] ? String(r['Nilai SKM']).split(',').map(Number) : [];
         const idx = hitungIndeks(arr);
@@ -331,7 +304,6 @@ function prosesDataDanRender() {
         
         const lay = amanDariXSS(r['Layanan'] || 'Tidak Diketahui');
         
-        // Buat rumah (array) baru jika gerai ini belum ada di memori
         if (!geraiM[lay]) {
             geraiM[lay] = { t: 0, c: 0, rows: [] };
         }
@@ -342,7 +314,6 @@ function prosesDataDanRender() {
         }
         
         const p = evaluasiMutu(idx);
-        // Simpan baris tabel ke dalam rumah gerai masing-masing
         geraiM[lay].rows.push(`
             <tr>
                 <td style="text-align:center;font-weight:700;color:#6B7280;">${i+1}</td>
@@ -355,18 +326,15 @@ function prosesDataDanRender() {
         `);
     });
 
-    // Langkah 2: Rakit Tombol dan Tabel berdasarkan Kelompok Gerai
     for (const [namaGerai, dataGerai] of Object.entries(geraiM)) {
         if (dataGerai.rows.length === 0) continue;
         
         const rataGerai = dataGerai.c > 0 ? (dataGerai.t / dataGerai.c) : 0;
         const mutuGerai = evaluasiMutu(rataGerai);
         
-        // Buat pembungkus utama
         const itemDiv = document.createElement('div');
         itemDiv.className = 'accordion-item';
         
-        // Buat tombol header yang bisa diklik
         const btnHeader = document.createElement('button');
         btnHeader.className = 'accordion-header';
         btnHeader.innerHTML = `
@@ -378,7 +346,6 @@ function prosesDataDanRender() {
             </div>
         `;
         
-        // Buat wadah isi tabel yang tersembunyi
         const contentDiv = document.createElement('div');
         contentDiv.className = 'accordion-content';
         contentDiv.innerHTML = `
@@ -401,7 +368,6 @@ function prosesDataDanRender() {
             </div>
         `;
         
-        // Logika saat tombol diklik (Buka/Tutup)
         btnHeader.addEventListener('click', function() {
             this.classList.toggle('active');
         });
@@ -411,7 +377,6 @@ function prosesDataDanRender() {
         accordionContainer.appendChild(itemDiv);
     }
 
-    // Langkah 3: Hitung dan tampilkan Rata-rata Keseluruhan di tabel bawah
     const totalR = dataTampil.length;
     const elTotal = document.getElementById('kpi-total');
     const elIkm = document.getElementById('kpi-indeks');
@@ -429,7 +394,6 @@ function prosesDataDanRender() {
         </tr>
     `;
 
-    // Langkah 4: Pembaruan Grafik 
     let gb = '-', sm = 0;
     const labels = [], dataChart = [], jumlah = [];
     for (const [g, d] of Object.entries(geraiM)) {
@@ -478,7 +442,6 @@ function resetFilter() {
 function eksporKeExcel() {
     if (!dataTampil.length) { alert('Tidak ada data untuk diekspor.'); return; }
     
-    // 1. Memetakan data seragam tanpa Nama Pemohon
     const dataExcel = dataTampil.map((r, i) => {
         const arr = r['Nilai SKM'] ? String(r['Nilai SKM']).split(',').map(Number) : [];
         const idx = hitungIndeks(arr);
@@ -493,7 +456,6 @@ function eksporKeExcel() {
         };
     });
     
-    // 2. Mengekspor ke format Excel
     const ws = XLSX.utils.json_to_sheet(dataExcel);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Data SKM');
@@ -503,17 +465,15 @@ function eksporKeExcel() {
 function eksporKePDF() {
     if (!dataTampil.length) { alert('Tidak ada data untuk dicetak.'); return; }
 
-    // 1. Buat elemen sementara yang tersembunyi untuk format cetak resmi
     const tempDiv = document.createElement('div');
     tempDiv.style.padding = '20px';
     tempDiv.style.background = '#ffffff';
     tempDiv.style.color = '#000000';
     tempDiv.style.fontFamily = 'Arial, sans-serif';
     tempDiv.style.position = 'absolute';
-    tempDiv.style.left = '-9999px'; // Disembunyikan dari layar pengguna
+    tempDiv.style.left = '-9999px'; 
     document.body.appendChild(tempDiv);
 
-    // 2. Rancang HTML tabel dengan gaya padat (hitam putih, tanpa warna latar)
     let html = `
         <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">
             <h2 style="margin: 0; font-size: 16px; text-transform: uppercase;">Laporan Rekapitulasi Survei Kepuasan Masyarakat</h2>
@@ -533,7 +493,6 @@ function eksporKePDF() {
             <tbody>
     `;
 
-    // 3. Masukkan data ke dalam tabel cetak
     dataTampil.forEach((r, i) => {
         const arr = r['Nilai SKM'] ? String(r['Nilai SKM']).split(',').map(Number) : [];
         const idx = hitungIndeks(arr);
@@ -561,7 +520,6 @@ function eksporKePDF() {
 
     tempDiv.innerHTML = html;
 
-    // 4. Konversi ke PDF dengan mode landscape agar tabel padat ini muat
     html2pdf().from(tempDiv).set({
         margin: 10,
         filename: 'Laporan_Rekap_SKM_MPP_Luwu.pdf',
@@ -569,7 +527,6 @@ function eksporKePDF() {
         html2canvas: { scale: 2, logging: false },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } 
     }).save().then(() => {
-        // Hapus elemen pembantu setelah proses unduh selesai
         document.body.removeChild(tempDiv);
     });
 }
@@ -600,7 +557,6 @@ function loadDataLaporan() {
     if (!select) return;
     const tahun = parseInt(select.value);
 
-    // Pastikan pengguna sudah memilih tahun di dropdown
     if (isNaN(tahun)) {
         alert('Silakan pilih tahun terlebih dahulu.');
         return;
@@ -608,12 +564,9 @@ function loadDataLaporan() {
 
     const tbody = document.getElementById('lp-unsur-body');
     
-    // Periksa apakah data sudah ditarik dari server saat proses Login
     if (dataGlobal && dataGlobal.length > 0) {
-        // Langsung tampilkan laporan berdasarkan memori, sangat cepat!
         renderLaporan(dataGlobal, tahun);
     } else {
-        // Jika datanya benar-benar kosong di database
         if (tbody) {
             document.getElementById('lp-total').innerText = '0';
             document.getElementById('lp-ikm').innerText = '0.00';
