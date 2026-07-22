@@ -350,12 +350,6 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-.btn-export-red:hover {
-    background-color: #FEF2F2;
-    color: #991B1B;
-    border-color: #FCA5A5;
-}
-
 .loader-container {
     display: flex;
     flex-direction: column;
@@ -632,6 +626,114 @@ body {
     color: #94A3B8;
 }
 
+.accordion-item {
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+    background: white;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.accordion-header {
+    width: 100%;
+    text-align: left;
+    padding: 16px 20px;
+    background: #F8FAFC;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--brand-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.accordion-header:hover {
+    background: #F1F5F9;
+}
+
+.accordion-header.active {
+    background: var(--brand-primary);
+    color: white;
+}
+
+.badge-count {
+    background: var(--brand-accent);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 800;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.accordion-header.active .badge-count {
+    background: white;
+    color: var(--brand-accent);
+}
+
+.accordion-header::after {
+    content: '\25BC'; 
+    font-size: 12px;
+    transition: transform 0.3s ease;
+    margin-left: 15px;
+}
+
+.accordion-header.active::after {
+    transform: rotate(-180deg); 
+}
+
+.accordion-content {
+    display: none; 
+    padding: 0; 
+    border-top: 1px solid var(--border-light);
+}
+
+.accordion-header.active + .accordion-content {
+    display: block; 
+}
+
+.accordion-content .table-wrapper {
+    max-height: 350px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: none;
+    box-shadow: none;
+    border-radius: 0 0 8px 8px;
+}
+
+.accordion-content .premium-table th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #F9FAFB;
+    box-shadow: 0 1px 0 var(--border-light);
+}
+
+.accordion-content .table-wrapper::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.accordion-content .table-wrapper::-webkit-scrollbar-track {
+    background: #F8FAFC;
+}
+
+.accordion-content .table-wrapper::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 10px;
+}
+
+.accordion-content .table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
 @media (max-width: 900px) {
     .admin-layout {
         flex-direction: column;
@@ -738,77 +840,16 @@ body {
     .kpi-row-laporan {
         grid-template-columns: 1fr;
     }
-}
 
-.accordion-item {
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-sm);
-    margin-bottom: 12px;
-    background: white;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-}
+    .accordion-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
 
-.accordion-header {
-    width: 100%;
-    text-align: left;
-    padding: 16px 20px;
-    background: #F8FAFC;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--brand-dark);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background 0.2s, color 0.2s;
-}
-
-.accordion-header:hover {
-    background: #F1F5F9;
-}
-
-.accordion-header.active {
-    background: var(--brand-primary);
-    color: white;
-}
-
-.badge-count {
-    background: var(--brand-accent);
-    color: white;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 800;
-    margin-left: 10px;
-    vertical-align: middle;
-}
-
-.accordion-header.active .badge-count {
-    background: white;
-    color: var(--brand-accent);
-}
-
-.accordion-header::after {
-    content: '\25BC'; 
-    font-size: 12px;
-    transition: transform 0.3s ease;
-    margin-left: 15px;
-}
-
-.accordion-header.active::after {
-    transform: rotate(-180deg); 
-}
-
-.accordion-content {
-    display: none; 
-    padding: 0; 
-    border-top: 1px solid var(--border-light);
-}
-
-.accordion-header.active + .accordion-content {
-    display: block; 
+    .badge-count {
+        margin-left: 0;
+        margin-top: 4px;
+        display: inline-block;
+    }
 }
