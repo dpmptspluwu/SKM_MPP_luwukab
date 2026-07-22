@@ -316,43 +316,120 @@ function prosesDataDanRender() {
     if (content) content.style.display = 'block';
 
     let totalA = 0;
-    const geraiM = {};
-    const tbody = document.getElementById('table-body');
+    const geraiM = {}; 
+    const accordionContainer = document.getElementById('accordion-data-container');
     const tfoot = document.getElementById('table-footer');
-    if (!tbody || !tfoot) return;
-    tbody.innerHTML = '';
+    
+    if (!accordionContainer || !tfoot) return;
+    accordionContainer.innerHTML = ''; // Kosongkan wadah sebelumnya
 
+    // Langkah 1: Kelompokkan data per Gerai
     dataTampil.forEach((r, i) => {
         const arr = r['Nilai SKM'] ? String(r['Nilai SKM']).split(',').map(Number) : [];
         const idx = hitungIndeks(arr);
         totalA += idx;
+        
         const lay = amanDariXSS(r['Layanan'] || 'Tidak Diketahui');
-        if (!geraiM[lay]) geraiM[lay] = { t: 0, c: 0 };
-        if (!isNaN(idx) && idx > 0) { geraiM[lay].t += idx; geraiM[lay].c++; }
+        
+        // Buat rumah (array) baru jika gerai ini belum ada di memori
+        if (!geraiM[lay]) {
+            geraiM[lay] = { t: 0, c: 0, rows: [] };
+        }
+        
+        if (!isNaN(idx) && idx > 0) { 
+            geraiM[lay].t += idx; 
+            geraiM[lay].c++; 
+        }
+        
         const p = evaluasiMutu(idx);
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td style="text-align:center;font-weight:700;color:#6B7280;">${i+1}</td>
-            <td>${formatTanggalWaktu(r['Tanggal'])}</td>
-            <td>${amanDariXSS(r['Nama'])}<br><span style="font-size:12px;color:#64748B;">${amanDariXSS(r['Pekerjaan'])}</span></td>
-            <td><strong style="color:#1E3A8A;">${lay}</strong></td>
-            <td style="text-align:center;font-weight:800;">${idx.toFixed(2)}</td>
-            <td style="text-align:center;"><span style="background:${p.warnaLatar};color:${p.warnaTeks};padding:6px 12px;border-radius:8px;font-weight:800;">${p.mutu} - ${p.teks}</span></td>
-            <td class="saran-cell">${amanDariXSS(r['Saran'])}</td>`;
-        tbody.appendChild(tr);
+        // Simpan baris tabel ke dalam rumah gerai masing-masing
+        geraiM[lay].rows.push(`
+            <tr>
+                <td style="text-align:center;font-weight:700;color:#6B7280;">${i+1}</td>
+                <td>${formatTanggalWaktu(r['Tanggal'])}</td>
+                <td>${amanDariXSS(r['Nama'])}<br><span style="font-size:12px;color:#64748B;">${amanDariXSS(r['Pekerjaan'])}</span></td>
+                <td style="text-align:center;font-weight:800;">${idx.toFixed(2)}</td>
+                <td style="text-align:center;"><span style="background:${p.warnaLatar};color:${p.warnaTeks};padding:6px 12px;border-radius:8px;font-weight:800;font-size:12px;">${p.mutu} - ${p.teks}</span></td>
+                <td class="saran-cell">${amanDariXSS(r['Saran'])}</td>
+            </tr>
+        `);
     });
 
+    // Langkah 2: Rakit Tombol dan Tabel berdasarkan Kelompok Gerai
+    for (const [namaGerai, dataGerai] of Object.entries(geraiM)) {
+        if (dataGerai.rows.length === 0) continue;
+        
+        const rataGerai = dataGerai.c > 0 ? (dataGerai.t / dataGerai.c) : 0;
+        const mutuGerai = evaluasiMutu(rataGerai);
+        
+        // Buat pembungkus utama
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'accordion-item';
+        
+        // Buat tombol header yang bisa diklik
+        const btnHeader = document.createElement('button');
+        btnHeader.className = 'accordion-header';
+        btnHeader.innerHTML = `
+            <div style="display:flex; align-items:center;">
+                ${namaGerai} <span class="badge-count">${dataGerai.rows.length} Responden</span>
+            </div>
+            <div style="font-size: 13px; font-weight: 500;">
+                Rata-rata: <strong style="font-size: 15px;">${rataGerai.toFixed(2)}</strong> (${mutuGerai.teks})
+            </div>
+        `;
+        
+        // Buat wadah isi tabel yang tersembunyi
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'accordion-content';
+        contentDiv.innerHTML = `
+            <div class="table-wrapper" style="border:none; box-shadow:none; border-radius:0;">
+                <table class="premium-table">
+                    <thead>
+                        <tr>
+                            <th style="width:60px;text-align:center;">No.</th>
+                            <th>Tanggal Waktu</th>
+                            <th>Informasi Pemohon</th>
+                            <th style="text-align:center;">Nilai</th>
+                            <th style="text-align:center;">Mutu Pelayanan</th>
+                            <th>Saran & Masukan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${dataGerai.rows.join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
+        // Logika saat tombol diklik (Buka/Tutup)
+        btnHeader.addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+        
+        itemDiv.appendChild(btnHeader);
+        itemDiv.appendChild(contentDiv);
+        accordionContainer.appendChild(itemDiv);
+    }
+
+    // Langkah 3: Hitung dan tampilkan Rata-rata Keseluruhan di tabel bawah
     const totalR = dataTampil.length;
     const elTotal = document.getElementById('kpi-total');
     const elIkm = document.getElementById('kpi-indeks');
     if (elTotal) elTotal.innerText = totalR;
     const ig = totalR > 0 ? totalA / totalR : 0;
     if (elIkm) elIkm.innerText = ig.toFixed(2);
+    
     const pg = evaluasiMutu(ig);
-    tfoot.innerHTML = `<tr style="background:#F8FAFC;border-top:2px solid #E2E8F0;">
-        <td colspan="4" style="text-align:right;font-weight:800;">RATA-RATA KESELURUHAN:</td>
-        <td style="text-align:center;font-weight:800;font-size:18px;color:#1E40AF;">${ig.toFixed(2)}</td>
-        <td style="text-align:center;color:${pg.warnaTeks};">${pg.mutu} - ${pg.teks}</td><td></td></tr>`;
+    tfoot.innerHTML = `
+        <tr style="background:#F8FAFC; border-top:2px solid #E2E8F0;">
+            <td colspan="3" style="text-align:right;font-weight:800;color:#0F172A;">RATA-RATA KESELURUHAN MPP LUWU:</td>
+            <td style="text-align:center;font-weight:800;font-size:18px;color:#1E40AF;">${ig.toFixed(2)}</td>
+            <td style="text-align:center;color:${pg.warnaTeks};font-weight:800;">${pg.mutu} - ${pg.teks}</td>
+            <td></td>
+        </tr>
+    `;
 
+    // Langkah 4: Pembaruan Grafik 
     let gb = '-', sm = 0;
     const labels = [], dataChart = [], jumlah = [];
     for (const [g, d] of Object.entries(geraiM)) {
@@ -399,47 +476,101 @@ function resetFilter() {
 }
 
 function eksporKeExcel() {
-    if (!dataTampil.length) { alert('Tidak ada data.'); return; }
+    if (!dataTampil.length) { alert('Tidak ada data untuk diekspor.'); return; }
+    
+    // 1. Memetakan data seragam tanpa Nama Pemohon
     const dataExcel = dataTampil.map((r, i) => {
-        const ni = hitungIndeks(r['Nilai SKM'] ? String(r['Nilai SKM']).split(',').map(Number) : []);
-        const p = evaluasiMutu(ni);
+        const arr = r['Nilai SKM'] ? String(r['Nilai SKM']).split(',').map(Number) : [];
+        const idx = hitungIndeks(arr);
+        const p = evaluasiMutu(idx);
         return {
             "No": i + 1,
-            "Tanggal Waktu": formatTanggalWaktu(r['Tanggal']),
-            "Nama Pemohon": r['Nama'],
-            "Pekerjaan": r['Pekerjaan'],
-            "Instansi / Gerai": r['Layanan'],
-            "Nilai Indeks": ni.toFixed(2),
+            "Tanggal": formatTanggalWaktu(r['Tanggal']),
+            "Instansi / Gerai": r['Layanan'] || '-',
+            "Nilai Indeks": idx.toFixed(2),
             "Mutu Pelayanan": p.mutu + ' - ' + p.teks,
-            "Saran": r['Saran'] || '-'
+            "Saran & Masukan": r['Saran'] || '-'
         };
     });
+    
+    // 2. Mengekspor ke format Excel
     const ws = XLSX.utils.json_to_sheet(dataExcel);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Data SKM');
-    XLSX.writeFile(wb, 'Laporan_SKM_MPP_Luwu.xlsx');
+    XLSX.writeFile(wb, 'Laporan_Rekap_SKM_MPP_Luwu.xlsx');
 }
 
 function eksporKePDF() {
-    if (!dataTampil.length) return;
-    const el = document.getElementById('area-cetak-pdf');
-    if (!el) return;
-    
-    // Simpan gaya asli
-    const os = el.style.boxShadow, ob = el.style.border, or = el.style.borderRadius;
-    
-    // Reset gaya untuk PDF
-    el.style.boxShadow = 'none'; el.style.border = 'none'; el.style.borderRadius = '0';
-    
-    html2pdf().from(el).set({
+    if (!dataTampil.length) { alert('Tidak ada data untuk dicetak.'); return; }
+
+    // 1. Buat elemen sementara yang tersembunyi untuk format cetak resmi
+    const tempDiv = document.createElement('div');
+    tempDiv.style.padding = '20px';
+    tempDiv.style.background = '#ffffff';
+    tempDiv.style.color = '#000000';
+    tempDiv.style.fontFamily = 'Arial, sans-serif';
+    tempDiv.style.position = 'absolute';
+    tempDiv.style.left = '-9999px'; // Disembunyikan dari layar pengguna
+    document.body.appendChild(tempDiv);
+
+    // 2. Rancang HTML tabel dengan gaya padat (hitam putih, tanpa warna latar)
+    let html = `
+        <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">
+            <h2 style="margin: 0; font-size: 16px; text-transform: uppercase;">Laporan Rekapitulasi Survei Kepuasan Masyarakat</h2>
+            <h3 style="margin: 5px 0 0; font-size: 13px; font-weight: normal;">Mal Pelayanan Publik (MPP) Kabupaten Luwu</h3>
+        </div>
+        <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="border: 1px solid #000; padding: 6px; text-align: center; width: 5%;">No.</th>
+                    <th style="border: 1px solid #000; padding: 6px; text-align: center; width: 15%;">Tanggal</th>
+                    <th style="border: 1px solid #000; padding: 6px; text-align: center; width: 25%;">Instansi / Gerai</th>
+                    <th style="border: 1px solid #000; padding: 6px; text-align: center; width: 10%;">Nilai</th>
+                    <th style="border: 1px solid #000; padding: 6px; text-align: center; width: 15%;">Mutu Pelayanan</th>
+                    <th style="border: 1px solid #000; padding: 6px; text-align: center; width: 30%;">Saran & Masukan</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    // 3. Masukkan data ke dalam tabel cetak
+    dataTampil.forEach((r, i) => {
+        const arr = r['Nilai SKM'] ? String(r['Nilai SKM']).split(',').map(Number) : [];
+        const idx = hitungIndeks(arr);
+        const p = evaluasiMutu(idx);
+        const tgl = formatTanggalWaktu(r['Tanggal']);
+        const lay = amanDariXSS(r['Layanan'] || '-');
+        const saran = amanDariXSS(r['Saran'] || '-');
+
+        html += `
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px; text-align: center;">${i + 1}</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: center;">${tgl}</td>
+                <td style="border: 1px solid #000; padding: 5px;">${lay}</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: center; font-weight: bold;">${idx.toFixed(2)}</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: center;">${p.mutu} - ${p.teks}</td>
+                <td style="border: 1px solid #000; padding: 5px;">${saran}</td>
+            </tr>
+        `;
+    });
+
+    html += `
+            </tbody>
+        </table>
+    `;
+
+    tempDiv.innerHTML = html;
+
+    // 4. Konversi ke PDF dengan mode landscape agar tabel padat ini muat
+    html2pdf().from(tempDiv).set({
         margin: 10,
-        filename: 'Laporan_SKM_MPP_Luwu.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, backgroundColor: '#ffffff' },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        filename: 'Laporan_Rekap_SKM_MPP_Luwu.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } 
     }).save().then(() => {
-        // Kembalikan gaya asli setelah render
-        el.style.boxShadow = os; el.style.border = ob; el.style.borderRadius = or;
+        // Hapus elemen pembantu setelah proses unduh selesai
+        document.body.removeChild(tempDiv);
     });
 }
 
