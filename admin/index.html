@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard SKM - MPP Luwu</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
@@ -52,11 +52,14 @@
                 </a>
             </nav>
             <div class="sidebar-footer">
-                <p>&copy; 2026 DPMPTSP Kab. Luwu</p>
-                <p><i>Versi 2.0 Enterprise</i></p>
+                <p style="line-height: 1.4;">
+                    &copy; 2026 DPMPTSP Kab. Luwu<br>
+                    <i>Versi 2.0 Enterprise</i>
+                </p>
                 <button id="btn-logout">Keluar</button>
             </div>
         </aside>
+        
         <main class="main-content">
             <div id="tab-dashboard" class="tab-content active">
                 <header class="topbar">
@@ -73,7 +76,7 @@
                             <button onclick="resetFilter()">Reset</button>
                         </div>
                         <button class="btn-export" onclick="eksporKeExcel()">Unduh Excel</button>
-                        <button class="btn-export btn-export-red" onclick="eksporKePDF()">Unduh PDF</button>
+                        <button class="btn-export" onclick="eksporKePDF()">Unduh PDF</button>
                     </div>
                 </header>
                 <div id="loader" class="loader-container">
@@ -114,6 +117,8 @@
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
 
             <div id="tab-laporan" class="tab-content">
                 <header class="topbar">
@@ -122,7 +127,7 @@
                         <p class="page-subtitle">Rekapitulasi Indeks Kepuasan Masyarakat per Tahun</p>
                     </div>
                     <div class="header-actions no-print">
-                        <button class="btn-export btn-export-red" onclick="cetakPDFLaporan()">Cetak PDF</button>
+                        <button class="btn-export" onclick="cetakPDFLaporan()">Cetak PDF</button>
                     </div>
                 </header>
                 <div class="filter-bar-laporan no-print">
