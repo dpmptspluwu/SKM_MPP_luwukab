@@ -6,6 +6,8 @@ let dataTampil = [];
 let chartInstance = null;
 let chartBulanan = null;
 let chartGerai = null;
+let percobaanGagal = 0; 
+let waktuTerkunci = false; 
 
 const namaUnsur = [
     "Kesesuaian persyaratan pelayanan",
@@ -99,17 +101,39 @@ function logout() {
     if (navDashboard) navDashboard.classList.add('active');
 }
 
+// [DOKUMENTASI KODE]
+// Fungsi Login yang ditingkatkan dengan standar Enterprise:
+// 1. Loading State (Mencegah klik ganda)
+// 2. Anti-Spam/Brute Force (Mengunci sistem setelah 3x gagal)
+// 3. UX Halus (Mengosongkan input jika salah)
 async function cobaLogin() {
+    // Jika sistem sedang menghukum/mengunci pengguna, hentikan aksi
+    if (waktuTerkunci) return; 
+
     const pwInput = document.getElementById('login-password');
     const errorEl = document.getElementById('login-error');
-    if (!pwInput || !errorEl) return;
+    const loginBtn = document.getElementById('login-btn');
+
+    if (!pwInput || !errorEl || !loginBtn) return;
     const pw = pwInput.value.trim();
+
+    // Validasi kosong
     if (!pw) {
-        errorEl.textContent = 'Masukkan kata sandi.';
+        errorEl.textContent = 'Silakan masukkan kata sandi Anda.';
         errorEl.style.display = 'block';
+        pwInput.focus();
         return;
     }
+
+    // --- MULAI EFEK LOADING ---
     errorEl.style.display = 'none';
+    const teksAsli = loginBtn.innerText;
+    loginBtn.innerText = 'Memverifikasi...';
+    loginBtn.style.opacity = '0.7';
+    loginBtn.style.cursor = 'wait';
+    loginBtn.disabled = true;
+    pwInput.disabled = true;
+
     try {
         const res = await fetch(scriptURL + '?action=login', {
             method: 'POST',
@@ -117,18 +141,78 @@ async function cobaLogin() {
             body: JSON.stringify({ password: pw })
         });
         const data = await res.json();
+
         if (data.status === 'sukses' && data.token) {
+            // LOGIN BERHASIL
+            percobaanGagal = 0; // Reset hitungan kegagalan
+            pwInput.value = ''; // Bersihkan kolom sandi
             setToken(data.token);
             sembunyikanLogin();
             tarikDataServer();
         } else {
-            errorEl.textContent = data.pesan || 'Kata sandi salah.';
-            errorEl.style.display = 'block';
+            // LOGIN GAGAL
+            percobaanGagal++;
+            pwInput.value = ''; // Kosongkan input otomatis
+            
+            if (percobaanGagal >= 3) {
+                // HUKUMAN: Kunci sistem jika gagal 3x
+                kunciSistemLogin(errorEl, loginBtn, pwInput);
+            } else {
+                errorEl.textContent = (data.pesan || 'Kata sandi salah.') + ` (Sisa percobaan: ${3 - percobaanGagal})`;
+                errorEl.style.display = 'block';
+                pwInput.focus(); // Kembalikan kursor ke input
+            }
         }
     } catch (e) {
-        errorEl.textContent = 'Gagal terhubung. Periksa koneksi.';
+        errorEl.textContent = 'Gagal terhubung ke server keamanan. Periksa koneksi internet Anda.';
         errorEl.style.display = 'block';
+    } finally {
+        // --- SELESAI EFEK LOADING ---
+        if (!waktuTerkunci) {
+            loginBtn.innerText = teksAsli;
+            loginBtn.style.opacity = '1';
+            loginBtn.style.cursor = 'pointer';
+            loginBtn.disabled = false;
+            pwInput.disabled = false;
+        }
     }
+}
+
+// [DOKUMENTASI KODE]
+// Fungsi khusus untuk mengunci halaman login (Timer Hitung Mundur)
+function kunciSistemLogin(errorEl, loginBtn, pwInput) {
+    waktuTerkunci = true;
+    let sisaWaktu = 30; // Lama waktu penguncian dalam detik (Bisa Bos ubah)
+    
+    // Matikan tombol dan input
+    pwInput.disabled = true;
+    loginBtn.disabled = true;
+    loginBtn.style.opacity = '0.5';
+    loginBtn.style.cursor = 'not-allowed';
+    
+    // Jalankan timer mundur setiap 1 detik (1000 milidetik)
+    const hitungMundur = setInterval(() => {
+        errorEl.innerHTML = `⚠️ <b>Akses Dibekukan Sementara</b><br>Terlalu banyak percobaan gagal. Silakan coba lagi dalam <b>${sisaWaktu} detik</b>.`;
+        errorEl.style.display = 'block';
+        errorEl.style.color = '#B91C1C'; // Warna merah tegas
+        sisaWaktu--;
+        
+        // Jika waktu habis, buka kembali kuncinya
+        if (sisaWaktu < 0) {
+            clearInterval(hitungMundur);
+            waktuTerkunci = false;
+            percobaanGagal = 0; // Reset kesempatan
+            
+            // Nyalakan kembali tampilan
+            pwInput.disabled = false;
+            loginBtn.disabled = false;
+            loginBtn.innerText = 'Masuk';
+            loginBtn.style.opacity = '1';
+            loginBtn.style.cursor = 'pointer';
+            errorEl.style.display = 'none';
+            pwInput.focus();
+        }
+    }, 1000);
 }
 
 // [DOKUMENTASI KODE]
