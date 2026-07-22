@@ -131,49 +131,45 @@ async function cobaLogin() {
     }
 }
 
+// [DOKUMENTASI KODE]
+// Fungsi ini bertugas mengubah teks tanggal dari server menjadi objek Date JavaScript.
+// Pembaruan: Menambahkan penanganan otomatis format Date bawaan JS/ISO 8601.
 function parseTanggal(str) {
     if (!str) return new Date(NaN);
 
-    // Format server: "yyyy-MM-dd HH:mm:ss" (contoh: 2026-07-22 14:30:00)
-    const regexISO = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/;
-    const matchISO = str.match(regexISO);
-    if (matchISO) {
-        const [, tahun, bulan, tanggal, jam, menit, detik] = matchISO;
-        return new Date(
-            parseInt(tahun, 10),
-            parseInt(bulan, 10) - 1,
-            parseInt(tanggal, 10),
-            parseInt(jam, 10),
-            parseInt(menit, 10),
-            parseInt(detik, 10)
-        );
+    // 1. Coba baca menggunakan pembacaan bawaan JavaScript (Solusi untuk format Google Sheets)
+    const jsDate = new Date(str);
+    if (!isNaN(jsDate.getTime())) {
+        return jsDate;
     }
 
-    // Format "yyyy-MM-dd" (tanpa jam)
+    // 2. Fallback untuk format manual: "yyyy-MM-dd HH:mm:ss"
+    const regexISO = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/;
+    const matchISO = String(str).match(regexISO);
+    if (matchISO) {
+        const [, tahun, bulan, tanggal, jam, menit, detik] = matchISO;
+        return new Date(parseInt(tahun, 10), parseInt(bulan, 10) - 1, parseInt(tanggal, 10), parseInt(jam, 10), parseInt(menit, 10), parseInt(detik, 10));
+    }
+
+    // 3. Fallback untuk format tanggal tanpa jam: "yyyy-MM-dd"
     const regexISODate = /^(\d{4})-(\d{2})-(\d{2})$/;
-    const matchISODate = str.match(regexISODate);
+    const matchISODate = String(str).match(regexISODate);
     if (matchISODate) {
         const [, tahun, bulan, tanggal] = matchISODate;
         return new Date(parseInt(tahun, 10), parseInt(bulan, 10) - 1, parseInt(tanggal, 10));
     }
 
-    // Fallback: format "dd/MM/yyyy HH:mm:ss" (data lama)
-    const parts = str.split(' ');
+    // 4. Fallback terakhir untuk format lama: "dd/MM/yyyy HH:mm:ss"
+    const parts = String(str).split(' ');
     if (parts.length >= 1) {
         const dp = parts[0].split('/');
         const tp = (parts[1] || '00:00:00').split(':');
         if (dp.length === 3) {
-            return new Date(
-                parseInt(dp[2], 10),
-                parseInt(dp[1], 10) - 1,
-                parseInt(dp[0], 10),
-                parseInt(tp[0], 10) || 0,
-                parseInt(tp[1], 10) || 0,
-                parseInt(tp[2], 10) || 0
-            );
+            return new Date(parseInt(dp[2], 10), parseInt(dp[1], 10) - 1, parseInt(dp[0], 10), parseInt(tp[0], 10) || 0, parseInt(tp[1], 10) || 0, parseInt(tp[2], 10) || 0);
         }
     }
 
+    // Jika semua format gagal, kembalikan status tidak valid
     return new Date(NaN);
 }
 
@@ -213,7 +209,7 @@ function formatTanggalWaktu(s) {
 function hitungIndeks(arr) {
     const clean = arr.filter(n => !isNaN(n) && n > 0);
     if (clean.length === 0) return 0;
-    return (clean.reduce((a, b) => a + b, 0) / 9) * 25;
+    return (clean.reduce((a, b) => a + b, 0) / clean.length) * 25; 
 }
 
 function evaluasiMutu(n) {
@@ -344,11 +340,13 @@ function eksporKePDF() {
     if (!dataTampil.length) return;
     const el = document.getElementById('area-cetak-pdf');
     if (!el) return;
-    const ks = document.getElementById('kop-surat'), jw = document.getElementById('judul-tabel-web');
+    
+    // Simpan gaya asli
     const os = el.style.boxShadow, ob = el.style.border, or = el.style.borderRadius;
-    if (ks) ks.style.display = 'block';
-    if (jw) jw.style.display = 'none';
+    
+    // Reset gaya untuk PDF
     el.style.boxShadow = 'none'; el.style.border = 'none'; el.style.borderRadius = '0';
+    
     html2pdf().from(el).set({
         margin: 10,
         filename: 'Laporan_SKM_MPP_Luwu.pdf',
@@ -356,8 +354,7 @@ function eksporKePDF() {
         html2canvas: { scale: 2, backgroundColor: '#ffffff' },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
     }).save().then(() => {
-        if (ks) ks.style.display = 'none';
-        if (jw) jw.style.display = 'block';
+        // Kembalikan gaya asli setelah render
         el.style.boxShadow = os; el.style.border = ob; el.style.borderRadius = or;
     });
 }
@@ -384,43 +381,40 @@ function setTanggalTTD() {
 }
 
 function loadDataLaporan() {
-    const token = getToken();
     const select = document.getElementById('pilih-tahun-laporan');
     if (!select) return;
     const tahun = parseInt(select.value);
 
-    if (!token) {
-        alert('Sesi login berakhir. Silakan login ulang.');
-        hapusToken();
-        tampilkanLogin();
-        return;
-    }
+    // Pastikan pengguna sudah memilih tahun di dropdown
     if (isNaN(tahun)) {
         alert('Silakan pilih tahun terlebih dahulu.');
         return;
     }
 
-    // Beri tahu pengguna bahwa data sedang dimuat
     const tbody = document.getElementById('lp-unsur-body');
-    if (tbody) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;">Memuat data tahun ' + tahun + '...</td></tr>';
-
-    fetch(scriptURL + '?action=data&token=' + encodeURIComponent(token))
-        .then(r => r.json())
-        .then(d => {
-            if (d.status === 'sukses') {
-                renderLaporan(d.data, tahun);
-            } else if (d.status === 'unauthorized') {
-                alert('Sesi tidak valid. Silakan login ulang.');
-                hapusToken();
-                tampilkanLogin();
-            } else {
-                alert('Gagal memuat data laporan. Silakan coba lagi.');
+    
+    // Periksa apakah data sudah ditarik dari server saat proses Login
+    if (dataGlobal && dataGlobal.length > 0) {
+        // Langsung tampilkan laporan berdasarkan memori, sangat cepat!
+        renderLaporan(dataGlobal, tahun);
+    } else {
+        // Jika datanya benar-benar kosong di database
+        if (tbody) {
+            document.getElementById('lp-total').innerText = '0';
+            document.getElementById('lp-ikm').innerText = '0.00';
+            document.getElementById('lp-gerai').innerText = '-';
+            
+            const badge = document.getElementById('lp-badge');
+            if (badge) {
+                badge.innerText = '-';
+                badge.style.background = '#F1F5F9';
+                badge.style.color = '#475569';
             }
-        })
-        .catch(() => {
-            alert('Gagal terhubung ke server. Periksa koneksi internet Anda.');
-        });
-}
+            
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:#6B7280;">Belum ada data survei untuk tahun ' + tahun + '.</td></tr>';
+        }
+    }
+}}
 
 function renderLaporan(data, tahun) {
     const filtered = data.filter(r => { const t = parseTanggal(r['Tanggal']); return !isNaN(t) && t.getFullYear() === tahun; });
