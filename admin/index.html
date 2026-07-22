@@ -77,6 +77,10 @@
                         </div>
                         <button class="btn-export" onclick="eksporKeExcel()">Unduh Excel</button>
                         <button class="btn-export" onclick="eksporKePDF()">Unduh PDF</button>
+						<button class="btn-export" style="background-color: #EFF6FF; border-color: #BFDBFE; color: #1E3A8A;" onclick="bukaModalKalkulasi()">
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+							Cara Perhitungan
+						</button>
                     </div>
                 </header>
                 <div id="loader" class="loader-container">
@@ -144,6 +148,32 @@
                 <div class="section"><div class="section-title">Rekapitulasi per Unsur Pelayanan</div><table class="unsur-table"><thead><tr><th>No</th><th>Unsur Pelayanan</th><th>Nilai Rata-rata</th><th>Mutu</th></tr></thead><tbody id="lp-unsur-body"></tbody><tfoot id="lp-unsur-footer"></tfoot></table></div>
                 
             </div>
+			
+            <div id="modal-kalkulasi" class="modal-overlay">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Panduan Kalkulasi Indeks SKM</h2>
+                        <button class="close-btn" onclick="tutupModalKalkulasi()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Perhitungan Indeks Kepuasan Masyarakat (IKM) pada sistem ini berjalan otomatis dan akurat mengacu pada standar resmi <strong>KemenPAN-RB</strong>.</p>
+                        <ol style="margin-left: 20px; margin-top: 12px; line-height: 1.6;">
+                            <li><strong>Penyaringan Data Valid:</strong> Sistem cerdas membuang jawaban yang terlewat (kosong) agar rata-rata pembagi tetap proporsional.</li>
+                            <li><strong>Nilai Rata-rata Dasar:</strong> Total nilai jawaban responden (skala 1 sampai 4) dijumlahkan, lalu dibagi dengan jumlah pertanyaan yang dijawab.</li>
+                            <li><strong>Konversi Skala 100:</strong> Nilai rata-rata dasar kemudian dikalikan <strong>25</strong> untuk menghasilkan Indeks SKM dengan skala 25 hingga 100.</li>
+                        </ol>
+                        <div style="background: #F8FAFC; padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 13px; border: 1px solid #E2E8F0;">
+                            <strong>Contoh Perhitungan:</strong><br>
+                            Jika total nilai dari 9 unsur layanan yang dijawab adalah 32, maka:<br>
+                            &bull; Rata-rata Dasar = 32 &divide; 9 = 3.55<br>
+                            &bull; Indeks SKM = 3.55 &times; 25 = <strong style="color:#1E40AF; font-size: 15px;">88.75 (Sangat Baik)</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			
+			
+			
         </main>
     </div>
     <script src="admin.js"></script>
