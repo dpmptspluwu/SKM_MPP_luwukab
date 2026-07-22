@@ -400,9 +400,9 @@ function loadDataLaporan() {
         return;
     }
 
-    // Tampilkan loading di area laporan
-    const bodyUnsur = document.getElementById('lp-unsur-body');
-    if (bodyUnsur) bodyUnsur.innerHTML = '<tr><td colspan="4" style="text-align:center;">Memuat data...</td></tr>';
+    // Beri tahu pengguna bahwa data sedang dimuat
+    const tbody = document.getElementById('lp-unsur-body');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;">Memuat data tahun ' + tahun + '...</td></tr>';
 
     fetch(scriptURL + '?action=data&token=' + encodeURIComponent(token))
         .then(r => r.json())
@@ -410,14 +410,16 @@ function loadDataLaporan() {
             if (d.status === 'sukses') {
                 renderLaporan(d.data, tahun);
             } else if (d.status === 'unauthorized') {
-                alert('Sesi login tidak valid. Silakan login ulang.');
+                alert('Sesi tidak valid. Silakan login ulang.');
                 hapusToken();
                 tampilkanLogin();
             } else {
-                alert('Gagal memuat data laporan.');
+                alert('Gagal memuat data laporan. Silakan coba lagi.');
             }
         })
-        .catch(() => alert('Gagal terhubung ke server.'));
+        .catch(() => {
+            alert('Gagal terhubung ke server. Periksa koneksi internet Anda.');
+        });
 }
 
 function renderLaporan(data, tahun) {
@@ -430,7 +432,8 @@ function renderLaporan(data, tahun) {
     badge.style.background = '#F1F5F9';
     badge.style.color = '#475569';
     document.getElementById('lp-gerai').innerText = '-';
-    document.getElementById('lp-unsur-body').innerHTML = '<tr><td colspan="4" style="text-align:center;">Tidak ada data untuk tahun ' + tahun + '</td></tr>';
+    document.getElementById('lp-unsur-body').innerHTML =
+        '<tr><td colspan="4" style="text-align:center;padding:20px;">Belum ada data survei untuk tahun ' + tahun + '.</td></tr>';
     return;
 }
     let totalI = 0;
