@@ -339,3 +339,44 @@ textarea { resize: none; padding: 20px; }
     .header-titles h1 { font-size: 16px; }
     .question-text { font-size: 15px; margin-bottom: 10px; }
 }
+
+.copyright-footer {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 90%;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    z-index: 100; 
+    pointer-events: none; 
+    opacity: 0.8;
+    word-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+    .copyright-footer {
+        font-size: 11.5px;
+        bottom: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .copyright-footer {
+        font-size: 10px;
+        bottom: 8px;
+        max-width: 95%;
+    }
+}
+
+@media (max-height: 550px) {
+    .copyright-footer {
+        position: relative;
+        bottom: 0;
+        margin-top: 15px;
+    }
+}
