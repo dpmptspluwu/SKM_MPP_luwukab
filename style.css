@@ -24,6 +24,7 @@ body {
     background-image: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
     margin: 0;
     display: flex;
+	flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
