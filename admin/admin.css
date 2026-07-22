@@ -46,7 +46,9 @@ body {
     border-radius: 20px;
     text-align: center;
     box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-    width: 340px;
+    width: 100%;
+    max-width: 340px;     
+    margin: 0 20px; 
 }
 
 .login-card h3 {
@@ -466,7 +468,8 @@ body {
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border-light);
-    overflow-x: auto;
+    overflow-x: auto;    
+    -webkit-overflow-scrolling: touch; 
 }
 
 .premium-table {
@@ -696,20 +699,24 @@ body {
     .sidebar {
         flex-direction: column;
         align-items: stretch;
-        text-align: center;
+        text-align: center;       
+        padding: 16px; 
     }
 
     .brand-area {
         justify-content: center;
+        margin-bottom: 12px;
     }
 
     .nav-menu {
         flex-direction: column;
         align-items: stretch;
+        gap: 6px; 
     }
 
     .nav-item {
         justify-content: center;
+        padding: 10px;
     }
 
     .sidebar-footer {
@@ -719,8 +726,7 @@ body {
     }
 
     #btn-logout {
-        max-width: 180px;
-        width: 100%;
+        max-width: 100%; 
     }
 
     .kpi-grid {
