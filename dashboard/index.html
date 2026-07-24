@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live SKM - MPP Kabupaten Luwu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="layar.css">
+</head>
+<body>
+    <div class="main-wrapper">
+        <div class="header">
+            <div class="header-left">
+                <div class="logo-group">
+                    <img src="../logo/luwu.png" alt="Logo Luwu" class="logo-img">            
+                    <img src="../logo/mpp.png" alt="Logo MPP" class="logo-img">
+                </div>
+                <div class="header-title">
+                    <h1>Indeks Kepuasan Masyarakat</h1>
+                    <h2>Mal Pelayanan Publik (MPP) Kabupaten Luwu</h2>                   
+                    <div class="header-periode" id="lyr-periode">Memuat Periode...</div>
+                </div>           
+            </div>
+            <div class="header-right">
+            <div class="jam-digital" id="jam-live">00:00:00</div>
+            <div class="live-badge">
+                <div class="live-dot"></div>
+                SISTEM LIVE REAL-TIME
+            </div>
+        </div>
+        </div>
+
+        <div class="kpi-row">
+            <div class="card"><div class="card-title">Total Responden</div><div class="card-value" id="lyr-total">0</div></div>
+            <div class="card card-utama"><div class="card-title" style="color: #93C5FD;">Nilai IKM Rata-Rata</div><div class="card-value" id="lyr-indeks">0.00</div></div>
+            <div class="card"><div class="card-title">Mutu Pelayanan</div><div class="card-value card-value-small" id="lyr-huruf" style="color: #34D399; font-size: 60px;">-</div><div class="card-value-small" id="lyr-teksmutu" style="color: #A7F3D0;">Tidak Valid</div></div>
+        </div>
+
+        <div class="bottom-row">
+            <div class="demo-panel">
+                <div class="demo-item"><div class="demo-label">Gender (L / P)</div><div class="demo-val gender" id="lyr-gender">0 / 0</div></div>
+                <div class="demo-item"><div class="demo-label">Pendidikan Mayoritas</div><div class="demo-val" id="lyr-pend">-</div></div>
+                <div class="demo-item"><div class="demo-label">Pekerjaan Mayoritas</div><div class="demo-val" style="color: #FBBF24;" id="lyr-pek">-</div></div>
+            </div>
+            <div class="unsur-panel" id="unsur-container"></div>
+        </div>
+    </div>
+    <div class="ticker-wrap">
+        <div class="ticker-title">RATA-RATA NILAI PER GERAI :</div>
+        <div class="ticker" id="gerai-ticker">
+            
+        </div>
+    </div>
+
+    <script src="layar.js"></script>
+</body>
+</html>
