@@ -48,8 +48,8 @@ body {
 @keyframes bernapasRingan { 0% { transform: scale(0.98); } 100% { transform: scale(1.02); } }
 
 #lyr-total {
-    color: #34D399 !important;
-    text-shadow: 0 0 15px rgba(52, 211, 153, 0.6) !important;
+    color: #FFFFFF !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5) !important;
     animation: bernapasRingan 4s infinite alternate ease-in-out !important;
 }
 
@@ -73,33 +73,28 @@ body {
 .tema-mutu-d #lyr-huruf, .tema-mutu-d #lyr-teksmutu { color: #F87171; text-shadow: 2px 3px 4px rgba(0,0,0,0.6), 0 0 20px rgba(248, 113, 113, 0.6); animation: bernapasRingan 2.5s infinite alternate; }
 
 .rank-satu { background: rgba(251, 191, 36, 0.12) !important; border-color: rgba(251, 191, 36, 0.4) !important; }
-.rank-satu #lyr-rank-judul { color: #FDE047; }
-.rank-satu #lyr-rank-posisi { color: #FEF08A; font-size: clamp(14px, 1.5vw, 18px) !important; font-weight: 900; }
-.rank-satu #lyr-rank-nilai { color: #FBBF24; font-size: clamp(45px, 5.5vw, 75px) !important; text-shadow: 0 0 15px rgba(251, 191, 36, 0.7); }
-.rank-satu #lyr-rank-nama { color: #FFFFFF; font-weight: 900; font-size: clamp(16px, 1.8vw, 22px) !important; }
+.rank-satu #lyr-rank-judul { color: #FDE047 !important; }
+.rank-satu #lyr-rank-posisi { color: #FEF08A !important; font-size: clamp(14px, 1.6vw, 20px) !important; font-weight: 900 !important; letter-spacing: 2px !important; }
+.rank-satu #lyr-rank-nilai { font-size: clamp(45px, 5.5vw, 75px) !important; }
+.rank-satu #lyr-rank-nama { color: #FFFFFF !important; font-weight: 900 !important; font-size: clamp(18px, 2vw, 26px) !important; text-transform: uppercase !important; }
 
-.rank-biasa { 
-    background: rgba(255, 255, 255, 0.05) !important; 
-    border-color: rgba(255, 255, 255, 0.2) !important; 
-}
-.rank-biasa #lyr-rank-judul { 
-    color: #94A3B8 !important; 
-}
-.rank-biasa #lyr-rank-posisi { 
-    color: #CBD5E1 !important; 
-    font-size: clamp(12px, 1.2vw, 16px) !important; 
-    text-shadow: none !important; 
-}
-.rank-biasa #lyr-rank-nilai { 
-    color: #E2E8F0 !important; 
-    font-size: clamp(40px, 4.5vw, 65px) !important; 
-    text-shadow: 0 0 10px rgba(226, 232, 240, 0.3) !important; 
-}
-.rank-biasa #lyr-rank-nama { 
-    color: #93C5FD !important; 
-    font-weight: 700 !important; 
-    font-size: clamp(14px, 1.5vw, 20px) !important; 
-}
+.rank-dua { background: rgba(255, 255, 255, 0.05) !important; border-color: rgba(203, 213, 225, 0.3) !important; }
+.rank-dua #lyr-rank-judul { color: #94A3B8 !important; }
+.rank-dua #lyr-rank-posisi { color: #CBD5E1 !important; font-size: clamp(13px, 1.4vw, 18px) !important; font-weight: 800 !important; letter-spacing: 2px !important; text-shadow: none !important; }
+.rank-dua #lyr-rank-nilai { font-size: clamp(40px, 4.5vw, 65px) !important; }
+.rank-dua #lyr-rank-nama { color: #FFFFFF !important; font-weight: 900 !important; font-size: clamp(15px, 1.6vw, 22px) !important; text-transform: uppercase !important; }
+
+.rank-tiga { background: rgba(255, 255, 255, 0.05) !important; border-color: rgba(217, 119, 6, 0.3) !important; }
+.rank-tiga #lyr-rank-judul { color: #94A3B8 !important; }
+.rank-tiga #lyr-rank-posisi { color: #CBD5E1 !important; font-size: clamp(13px, 1.4vw, 18px) !important; font-weight: 800 !important; letter-spacing: 2px !important; text-shadow: none !important; }
+.rank-tiga #lyr-rank-nilai { font-size: clamp(40px, 4.5vw, 65px) !important; }
+.rank-tiga #lyr-rank-nama { color: #FFFFFF !important; font-weight: 900 !important; font-size: clamp(15px, 1.6vw, 22px) !important; text-transform: uppercase !important; }
+
+.rank-biasa { background: rgba(255, 255, 255, 0.02) !important; border-color: rgba(255, 255, 255, 0.1) !important; }
+.rank-biasa #lyr-rank-judul { color: #64748B !important; }
+.rank-biasa #lyr-rank-posisi { color: #94A3B8 !important; font-size: clamp(13px, 1.4vw, 18px) !important; font-weight: 800 !important; letter-spacing: 2px !important; text-shadow: none !important; }
+.rank-biasa #lyr-rank-nilai { font-size: clamp(40px, 4.5vw, 65px) !important; }
+.rank-biasa #lyr-rank-nama { color: #FFFFFF !important; font-weight: 900 !important; font-size: clamp(15px, 1.6vw, 22px) !important; text-transform: uppercase !important; }
 
 @keyframes fadeRank { 0%, 100% { opacity: 0; transform: translateY(1vh); } 15%, 85% { opacity: 1; transform: translateY(0); } }
 .animasi-ganti { animation: fadeRank 4.5s ease-in-out forwards; }
@@ -112,10 +107,35 @@ body {
 .demo-val.gender { color: #C4B5FD; }
 
 .unsur-panel { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1.5vw; padding: 2vh 2vw; display: grid; grid-template-columns: 1fr 1fr; column-gap: 3vw; align-content: space-evenly; }
+.unsur-panel-title { grid-column: 1 / -1; text-align: center; font-size: clamp(14px, 1.5vw, 20px); font-weight: 900; color: #93C5FD; text-transform: uppercase; letter-spacing: 3px; border-bottom: 1px dashed rgba(147, 197, 253, 0.3); padding-bottom: 1vh; margin-bottom: 0.5vh; }
+
 .unsur-item { display: flex; flex-direction: column; gap: 0.8vh; } 
-.unsur-header { display: flex; justify-content: space-between; align-items: flex-end; }
-.unsur-nama { font-size: clamp(13px, 1.4vw, 20px); font-weight: 800; color: #F8FAFC; letter-spacing: 0.5px; }
-.unsur-nilai { font-size: clamp(16px, 1.8vw, 25px); font-weight: 900; color: #34D399; }
+.unsur-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end; 
+    gap: 1vw;
+}
+
+.unsur-nama { 
+    font-size: clamp(12px, 1.4vw, 20px); 
+    font-weight: 900; 
+    color: #FFFFFF; 
+    letter-spacing: 1px; 
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8); 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+.unsur-nilai { 
+    font-size: clamp(16px, 1.8vw, 26px); 
+    font-weight: 900; 
+    color: #34D399; 
+    text-shadow: 0 0 10px rgba(52, 211, 153, 0.4); 
+    flex-shrink: 0; 
+}
+
 .bar-bg { width: 100%; height: clamp(4px, 0.8vh, 6px); background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
 .bar-fill { height: 100%; border-radius: 3px; width: 0%; transition: width 1s ease-out; }
 
