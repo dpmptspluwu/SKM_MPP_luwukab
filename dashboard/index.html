@@ -22,18 +22,39 @@
                 </div>           
             </div>
             <div class="header-right">
-            <div class="jam-digital" id="jam-live">00:00:00</div>
-            <div class="live-badge">
-                <div class="live-dot"></div>
-                SISTEM LIVE REAL-TIME
+                <div class="jam-digital" id="jam-live">00:00:00</div>
+                <div class="live-badge">
+                    <div class="live-dot"></div>
+                    LIVE REAL-TIME
+                </div>
             </div>
-        </div>
         </div>
 
         <div class="kpi-row">
-            <div class="card"><div class="card-title">Total Responden</div><div class="card-value" id="lyr-total">0</div></div>
-            <div class="card card-utama"><div class="card-title" style="color: #93C5FD;">Nilai IKM Rata-Rata</div><div class="card-value" id="lyr-indeks">0.00</div></div>
-            <div class="card"><div class="card-title">Mutu Pelayanan</div><div class="card-value card-value-small" id="lyr-huruf" style="color: #34D399; font-size: 60px;">-</div><div class="card-value-small" id="lyr-teksmutu" style="color: #A7F3D0;">Tidak Valid</div></div>
+            <div class="card">
+                <div class="card-title">Total Responden</div>
+                <div class="card-value" id="lyr-total">0</div>
+            </div>
+
+            <div class="card card-utama glow-utama">
+                <div class="badge-utama">INDEKS KESELURUHAN</div>
+                <div class="card-title" style="color: #93C5FD; margin-top: 8px;">Nilai IKM Rata-Rata</div>
+                <div class="card-value" id="lyr-indeks" style="font-size: 100px;">0.00</div>
+            </div>
+
+            <div class="card" id="kartu-mutu">
+                <div class="badge-utama" id="badge-mutu-teks">PREDIKAT KESELURUHAN</div>
+                <div class="card-title" style="margin-top: 8px;">Mutu Pelayanan</div>
+                <div class="card-value card-value-small" id="lyr-huruf" style="font-size: 85px; margin: 5px 0;">-</div>
+                <div class="card-value-small" id="lyr-teksmutu" style="font-size: 22px;">Tidak Valid</div>
+            </div>
+
+            <div class="card" id="kartu-ranking">
+                <div class="card-title" id="lyr-rank-judul">Top Performa Gerai</div>
+                <div class="card-value-small" id="lyr-rank-posisi" style="font-size: 16px; letter-spacing: 3px; margin-bottom: 5px;">PERINGKAT 1</div>
+                <div class="card-value" id="lyr-rank-nilai" style="font-size: 65px;">0.00</div>
+                <div class="card-value-small" id="lyr-rank-nama" style="font-size: 20px; margin-top: 10px; text-transform: uppercase;">Menunggu Data...</div>
+            </div>
         </div>
 
         <div class="bottom-row">
@@ -45,11 +66,10 @@
             <div class="unsur-panel" id="unsur-container"></div>
         </div>
     </div>
+    
     <div class="ticker-wrap">
         <div class="ticker-title">RATA-RATA NILAI PER GERAI :</div>
-        <div class="ticker" id="gerai-ticker">
-            
-        </div>
+        <div class="ticker" id="gerai-ticker"></div>
     </div>
 
     <script src="layar.js"></script>
