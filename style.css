@@ -8,9 +8,9 @@
     --text-main: #0F172A;
     --text-muted: #475569;
     --text-border: #CBD5E1;
-    --radius-lg: 20px;
+    --radius-lg: 24px;
     --radius-md: 12px;
-    --shadow-premium: 0 15px 35px rgba(15, 23, 42, 0.08);
+    --shadow-premium: 0 20px 40px rgba(15, 23, 42, 0.06);
 }
 
 * {
@@ -21,7 +21,7 @@
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
     background-color: var(--bg-color);
-    background-image: linear-gradient(135deg, #F0F9FF 0%, #E0E7FF 100%);
+    background-image: linear-gradient(135deg, #F4FAFF 0%, #E2EAF8 100%);
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -31,35 +31,38 @@ body {
     min-height: 100dvh;
     color: var(--text-main);
     position: relative;
-    padding: 20px;
+    padding: clamp(10px, 3vh, 20px) 15px;
     overflow-x: hidden;
 }
 
 .kiosk-container {
     background-color: var(--surface);
     width: 100%;
-    max-width: 650px;
-    padding: 35px;
+    max-width: 680px;
+    padding: clamp(20px, 4vw, 40px);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-premium);
-    border: 1px solid #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.8);
     text-align: center;
     position: relative;
     z-index: 10;
     margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .header-logos {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
-    padding-bottom: 20px;
+    margin-bottom: clamp(15px, 3vh, 25px);
+    padding-bottom: clamp(15px, 2vh, 20px);
     border-bottom: 2px solid #F1F5F9;
 }
 
 .logo-box {
-    width: 70px;
+    width: clamp(50px, 10vw, 75px);
     height: auto;
     display: flex;
     justify-content: center;
@@ -68,25 +71,25 @@ body {
 
 .img-logo {
     max-width: 100%;
-    max-height: 70px;
+    max-height: clamp(50px, 10vw, 75px);
     object-fit: contain;
 }
 
 .header-titles {
     flex: 1;
-    padding: 0 15px;
+    padding: 0 10px;
 }
 
 .header-titles h1 {
     color: var(--primary);
-    font-size: 20px;
+    font-size: clamp(16px, 3vw, 22px);
     font-weight: 800;
-    margin: 0 0 6px 0;
+    margin: 0 0 4px 0;
     letter-spacing: -0.5px;
 }
 
 .header-titles h2 {
-    font-size: 12px;
+    font-size: clamp(9px, 1.5vw, 13px);
     font-weight: 700;
     color: var(--text-muted);
     margin: 0;
@@ -97,13 +100,13 @@ body {
 .intro-box {
     background-color: #F8FAFC;
     border-radius: var(--radius-md);
-    padding: 20px;
+    padding: clamp(15px, 3vw, 24px);
     border: 1px solid var(--text-border);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.01);
 }
 
 .intro-box p {
-    text-align: justify;
+    text-align: center;
     line-height: 1.5;
     margin: 0 0 12px 0;
 }
@@ -114,9 +117,11 @@ body {
 }
 
 .intro-box ul li {
-    text-align: justify;
-    line-height: 1.6;
+    text-align: left;
+    line-height: 1.5;
     margin-bottom: 8px; 
+    font-size: clamp(12px, 2.5vw, 14px);
+    color: var(--text-muted);
 }
 
 .intro-box ul li:last-child {
@@ -124,15 +129,15 @@ body {
 }
 
 .question-text {
-    font-size: 18px;
+    font-size: clamp(16px, 4vw, 20px);
     font-weight: 800;
     line-height: 1.4;
-    margin-bottom: 20px;
+    margin-bottom: clamp(12px, 2.5vh, 20px);
     color: var(--text-main);
 }
 
 .sub-text {
-    font-size: 13px;
+    font-size: clamp(11px, 2vw, 14px);
     font-weight: 800;
     color: var(--primary-light);
     margin-bottom: 12px;
@@ -142,7 +147,7 @@ body {
 
 .step {
     display: none;
-    animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .step.active { 
@@ -150,22 +155,22 @@ body {
 }
 
 @keyframes slideUpFade {
-    0% { opacity: 0; transform: translateY(15px); }
+    0% { opacity: 0; transform: translateY(10px); }
     100% { opacity: 1; transform: translateY(0); }
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: clamp(12px, 2vh, 18px);
     text-align: left;
 }
 
 .input-text, .input-select, textarea {
     width: 100%;
-    padding: 15px 20px;
+    padding: clamp(12px, 2.5vh, 16px) 18px;
     border: 2px solid var(--text-border);
     border-radius: var(--radius-md);
     font-family: inherit;
-    font-size: 15px;
+    font-size: clamp(13px, 2.5vw, 15px);
     font-weight: 600;
     color: var(--text-main);
     background-color: #F8FAFC;
@@ -194,7 +199,7 @@ body {
     height: 8px;
     background-color: var(--text-border);
     border-radius: 4px;
-    margin-bottom: 24px;
+    margin-bottom: clamp(15px, 3vh, 24px);
     overflow: hidden;
 }
 
@@ -207,9 +212,9 @@ body {
 
 .options-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-top: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: clamp(10px, 2vw, 15px);
+    margin-top: clamp(15px, 2.5vh, 20px);
 }
 
 .btn-option {
@@ -219,14 +224,14 @@ body {
     background: var(--surface);
     border: 2px solid var(--text-border);
     border-radius: var(--radius-md);
-    padding: 15px 18px;
+    padding: clamp(12px, 2vh, 16px) 15px;
     cursor: pointer;
     text-align: left;
     font-family: inherit;
-    font-size: 15px;
+    font-size: clamp(13px, 2.5vw, 15px);
     font-weight: 700;
     color: var(--text-muted);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .radio-circle {
@@ -238,7 +243,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .radio-inner {
@@ -246,7 +251,7 @@ body {
     height: 10px;
     border-radius: 50%;
     background-color: transparent;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .btn-option:hover {
@@ -261,7 +266,6 @@ body {
     background-color: #EFF6FF;
     color: var(--primary);
     box-shadow: 0 6px 14px rgba(59, 130, 246, 0.12);
-    transform: translateY(-2px);
 }
 
 .btn-option.selected .radio-circle {
@@ -274,22 +278,21 @@ body {
 
 textarea { 
     resize: none; 
-    padding: 18px; 
 }
 
 .action-buttons {
     display: flex;
-    gap: 15px;
-    margin-top: 25px;
+    gap: 12px;
+    margin-top: clamp(15px, 3vh, 25px);
 }
 
 .btn-submit, .btn-back {
     font-family: inherit;
     font-weight: 800;
-    font-size: 15px;
+    font-size: clamp(14px, 2.5vw, 16px);
     border: none;
     border-radius: var(--radius-md);
-    padding: 15px;
+    padding: clamp(12px, 2.5vh, 16px);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -335,7 +338,7 @@ textarea {
 
 .text-success {
     color: var(--success);
-    font-size: 26px;
+    font-size: clamp(22px, 5vw, 28px);
     font-weight: 800;
     margin: 0;
     letter-spacing: -0.5px;
@@ -349,104 +352,16 @@ textarea {
 .copyright-footer {
     width: 100%;
     text-align: center;
-    font-size: 13px;
+    font-size: clamp(10px, 1.5vw, 12px);
     font-weight: 700;
     color: var(--text-muted);
     letter-spacing: 0.5px;
-    z-index: 100;
-    opacity: 0.8;
-    margin-top: 20px;
-    padding-bottom: 10px;
-}
-
-@media (max-width: 768px) {
-    body {
-        padding: 15px;
-    }
-    .kiosk-container { 
-        padding: 25px; 
-        border-radius: 16px;
-    }
-    .header-logos { 
-        padding-bottom: 15px; 
-        margin-bottom: 20px; 
-    }
-    .logo-box { 
-        width: 55px; 
-    }
-    .img-logo { 
-        max-height: 55px; 
-    }
-    .header-titles h1 { 
-        font-size: 18px; 
-    }
-    .header-titles h2 { 
-        font-size: 11px; 
-    }
-    .intro-box { 
-        padding: 16px; 
-    }
-    .question-text { 
-        font-size: 16px; 
-        margin-bottom: 16px;
-    }
-    .btn-option { 
-        padding: 14px 16px; 
-        font-size: 14px; 
-    }
-    .copyright-footer {
-        font-size: 12px;
-        margin-top: 15px;
-    }
+    margin-top: clamp(10px, 2vh, 20px);
 }
 
 @media (max-width: 480px) {
-    body { 
-        padding: 10px; 
-    }
-    .kiosk-container { 
-        padding: 20px 15px; 
-        border-radius: 14px;
-        border: none;
-    }
-    .header-logos { 
-        gap: 8px;
-    }
-    .logo-box { 
-        width: 45px; 
-    }
-    .img-logo { 
-        max-height: 45px; 
-    }
-    .header-titles {
-        padding: 0 8px;
-    }
-    .header-titles h1 { 
-        font-size: 16px; 
-    }
-    .header-titles h2 { 
-        font-size: 10px; 
-    }
-    .intro-box p, .intro-box ul { 
-        font-size: 13px; 
-    }
-    .input-text, .input-select, textarea { 
-        padding: 12px 15px; 
-        font-size: 14px; 
-    }
-    .btn-submit, .btn-back { 
-        padding: 14px; 
-        font-size: 14px; 
-    }
-    .options-grid { 
-        grid-template-columns: 1fr;
-        gap: 12px; 
-        margin-top: 15px;
-    }
     .action-buttons { 
         flex-direction: column; 
-        gap: 12px;
-        margin-top: 20px;
     }
     .btn-back { 
         order: 2; 
@@ -454,73 +369,7 @@ textarea {
     .btn-submit { 
         order: 1; 
     }
-    .copyright-footer {
-        font-size: 11px;
+    .options-grid { 
+        grid-template-columns: 1fr;
     }
 }
-
-@media (max-height: 650px) {
-    body {
-        justify-content: flex-start;
-        padding-top: 15px;
-    }
-    .kiosk-container {
-        margin: 0 auto;
-    }
-}
-
-@media (max-width: 480px), (max-height: 700px) {
-    body { 
-        padding: 5px 10px 30px 10px; 
-    }
-    
-    .kiosk-container { 
-        padding: 15px 12px; 
-        margin: auto; 
-    }
-    
-    .header-logos { 
-        margin-bottom: 12px; 
-        padding-bottom: 10px; 
-    }
-    .logo-box { width: 40px; }
-    .img-logo { max-height: 40px; }
-    .header-titles h1 { font-size: 15px; margin-bottom: 2px; }
-    .header-titles h2 { font-size: 9px; }
-
-    .intro-box { 
-        padding: 12px; 
-    }
-    
-    .intro-box p.sub-text { margin-bottom: 4px !important; font-size: 10px !important; }
-    .intro-box h3.question-text { font-size: 18px !important; margin-bottom: 10px !important; }
-
-    .intro-box > div { 
-        padding: 10px 12px !important; 
-        margin-bottom: 12px !important; 
-    }
-    .intro-box > div p { 
-        font-size: 12px !important; 
-        line-height: 1.4 !important; 
-    }
-
-    .intro-box ul { 
-        font-size: 12px !important; 
-        line-height: 1.4 !important; 
-    }
-    .intro-box ul li { 
-        margin-bottom: 4px !important; 
-    }
-
-    .btn-submit { 
-        padding: 12px !important; 
-        font-size: 14px !important; 
-        margin-top: 15px !important; 
-    }
-
-    .copyright-footer { 
-        font-size: 10px; 
-        bottom: 5px; 
-    }
-}
-
