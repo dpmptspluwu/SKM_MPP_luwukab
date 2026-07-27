@@ -217,7 +217,7 @@ body {
 }
 
 .label-survei {
-    font-size: 16px;
+    font-size: 22px;
     font-weight: 800;
     color: var(--primary-light);
     text-transform: uppercase;
@@ -481,7 +481,7 @@ body {
     }
     
     .label-survei {
-        font-size: 20px;
+        font-size: 28px;
     }
     
     #nama-gerai-tampil {
