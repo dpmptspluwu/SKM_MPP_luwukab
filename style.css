@@ -468,3 +468,59 @@ textarea {
         margin: 0 auto;
     }
 }
+
+@media (max-width: 480px), (max-height: 700px) {
+    body { 
+        padding: 5px 10px 30px 10px; 
+    }
+    
+    .kiosk-container { 
+        padding: 15px 12px; 
+        margin: auto; 
+    }
+    
+    .header-logos { 
+        margin-bottom: 12px; 
+        padding-bottom: 10px; 
+    }
+    .logo-box { width: 40px; }
+    .img-logo { max-height: 40px; }
+    .header-titles h1 { font-size: 15px; margin-bottom: 2px; }
+    .header-titles h2 { font-size: 9px; }
+
+    .intro-box { 
+        padding: 12px; 
+    }
+    
+    .intro-box p.sub-text { margin-bottom: 4px !important; font-size: 10px !important; }
+    .intro-box h3.question-text { font-size: 18px !important; margin-bottom: 10px !important; }
+
+    .intro-box > div { 
+        padding: 10px 12px !important; 
+        margin-bottom: 12px !important; 
+    }
+    .intro-box > div p { 
+        font-size: 12px !important; 
+        line-height: 1.4 !important; 
+    }
+
+    .intro-box ul { 
+        font-size: 12px !important; 
+        line-height: 1.4 !important; 
+    }
+    .intro-box ul li { 
+        margin-bottom: 4px !important; 
+    }
+
+    .btn-submit { 
+        padding: 12px !important; 
+        font-size: 14px !important; 
+        margin-top: 15px !important; 
+    }
+
+    .copyright-footer { 
+        font-size: 10px; 
+        bottom: 5px; 
+    }
+}
+
