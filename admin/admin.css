@@ -43,9 +43,9 @@ body {
 }
 
 .login-card {
-    background: white;
+    background: var(--bg-panel);
     padding: 32px;
-    border-radius: 20px;
+    border-radius: var(--radius-lg);
     text-align: center;
     box-shadow: 0 25px 50px rgba(0,0,0,0.3);
     width: 100%;
@@ -54,13 +54,13 @@ body {
 
 .login-card h3 {
     margin: 0 0 6px;
-    color: #111827;
+    color: var(--brand-dark);
     font-size: 22px;
 }
 
 .login-card p {
     font-size: 14px;
-    color: #6B7280;
+    color: var(--text-muted);
     margin-bottom: 24px;
 }
 
@@ -73,7 +73,7 @@ body {
 .password-wrapper input {
     width: 100%;
     padding: 14px 48px 14px 16px;
-    border: 2px solid #E5E7EB;
+    border: 2px solid var(--border-light);
     border-radius: 10px;
     font-size: 15px;
     outline: none;
@@ -295,27 +295,36 @@ body {
     display: flex;
     gap: 8px;
     align-items: center;
-    background: white;
-    padding: 6px 12px;
-    border-radius: 8px;
-    border: 1px solid #E5E7EB;
+    background: var(--bg-panel);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-light);
     flex-wrap: wrap;
 }
 
 .filter-box input[type="date"] {
-    border: none;
+    border: 1px solid transparent;
     font-family: inherit;
     font-size: 13px;
+    font-weight: 700;
     outline: none;
-    background: transparent;
+    background: #EFF6FF;
+    color: var(--brand-primary);
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.filter-box input[type="date"]:focus {
+    border-color: var(--brand-primary);
 }
 
 .filter-box button {
     border: none;
-    padding: 8px 14px;
+    padding: 10px 16px;
     border-radius: 6px;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 13px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -330,19 +339,19 @@ body {
 }
 
 .filter-box button:last-of-type {
-    background: #E5E7EB;
-    color: var(--text-main);
+    background: #F3F4F6;
+    color: var(--brand-dark);
 }
 
 .filter-box button:last-of-type:hover {
-    background: #D1D5DB;
+    background: #E5E7EB;
 }
 
 .btn-export {
     display: flex;
     align-items: center;
     gap: 8px;
-    background-color: #FFFFFF;
+    background-color: var(--bg-panel);
     color: #475569;
     border: 1px solid #CBD5E1;
     padding: 10px 18px;
@@ -483,7 +492,7 @@ body {
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border-light);
     width: 100%;
-    overflow-x: auto;    
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -532,18 +541,30 @@ body {
     align-items: center;
     margin-bottom: 24px;
     flex-wrap: wrap;
+    background: var(--bg-panel);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
 }
 
 .filter-bar-laporan select {
-    padding: 10px 16px;
+    padding: 12px 16px;
     border-radius: 8px;
-    border: 1px solid #E5E7EB;
+    border: 2px solid #BFDBFE;
     font-family: inherit;
     font-size: 14px;
-    background: white;
+    font-weight: 700;
+    background: #EFF6FF;
+    color: var(--brand-primary);
     outline: none;
     flex: 1;
     min-width: 200px;
+    transition: all 0.2s ease;
+}
+
+.filter-bar-laporan select:focus {
+    border-color: var(--brand-primary);
 }
 
 .section {
@@ -579,16 +600,16 @@ body {
 .unsur-table th {
     background: #1E3A8A;
     color: white;
-    padding: 12px 14px;
-    font-size: 11px;
+    padding: 14px;
+    font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     text-align: center;
 }
 
 .unsur-table td {
-    padding: 12px 14px;
-    font-size: 13px;
+    padding: 14px;
+    font-size: 14px;
     border-bottom: 1px solid #E5E7EB;
     text-align: center;
 }
@@ -618,9 +639,9 @@ body {
 .ttd-section {
     display: flex;
     justify-content: flex-end;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #E5E7EB;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-light);
 }
 
 .ttd-box {
@@ -630,14 +651,14 @@ body {
 
 .ttd-box .jabatan {
     font-size: 12px;
-    color: #6B7280;
+    color: var(--text-muted);
     margin-bottom: 60px;
 }
 
 .ttd-box .nama-ttd {
     font-size: 14px;
     font-weight: 800;
-    color: #111827;
+    color: var(--brand-dark);
 }
 
 .ttd-box .nip-ttd {
@@ -649,7 +670,7 @@ body {
     border: 1px solid var(--border-light);
     border-radius: var(--radius-sm);
     margin-bottom: 12px;
-    background: white;
+    background: var(--bg-panel);
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
@@ -689,7 +710,7 @@ body {
     font-size: 11px;
     font-weight: 800;
     margin-left: auto;
-    margin-right: 15px;
+    margin-right: 16px;
     vertical-align: middle;
     box-shadow: 0 2px 4px rgba(15, 23, 42, 0.15);
     border: 1px solid #475569;
@@ -780,7 +801,7 @@ body {
 }
 
 .modal-content {
-    background: white;
+    background: var(--bg-panel);
     width: 100%;
     max-width: 500px;
     border-radius: 16px;
@@ -883,9 +904,11 @@ body {
     .sidebar::-webkit-scrollbar {
         height: 4px;
     }
+    
     .sidebar::-webkit-scrollbar-track {
         background: transparent;
     }
+    
     .sidebar::-webkit-scrollbar-thumb {
         background: #CBD5E1;
         border-radius: 10px;
@@ -953,7 +976,7 @@ body {
     }
 
     .page-title {
-        font-size: 22px;
+        font-size: 24px;
     }
 
     .header-actions {
@@ -964,14 +987,42 @@ body {
     .filter-box {
         flex-direction: column;
         align-items: stretch;
+        padding: 16px;
+        background: #F8FAFC;
     }
     
-    .filter-box input, .filter-box button {
+    .filter-box input[type="date"] {
         width: 100%;
+        font-size: 15px;
+        padding: 12px;
+        text-align: center;
+        border: 2px solid #BFDBFE;
+    }
+
+    .filter-box button {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .filter-bar-laporan {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 16px;
+        background: #F8FAFC;
+    }
+    
+    .filter-bar-laporan select {
+        width: 100%;
+        font-size: 15px;
+        padding: 12px;
+        text-align: center;
+        border: 2px solid #BFDBFE;
     }
 
     .btn-export {
         justify-content: center;
+        padding: 12px;
     }
 
     .kpi-grid, .kpi-row-laporan {
@@ -980,12 +1031,15 @@ body {
 
     .accordion-header {
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 12px;
+        padding: 16px;
     }
 
     .badge-count {
         margin-left: 0;
         order: 3;
+        font-size: 12px;
+        padding: 6px 12px;
     }
 
     .ttd-section {
