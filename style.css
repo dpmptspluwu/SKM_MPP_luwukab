@@ -102,11 +102,25 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
 }
 
-.intro-box p,
-.intro-box ul {
+.intro-box p {
     text-align: justify;
     line-height: 1.5;
+    margin: 0 0 12px 0;
+}
+
+.intro-box ul {
     margin: 0;
+    padding-left: 20px;
+}
+
+.intro-box ul li {
+    text-align: justify;
+    line-height: 1.6;
+    margin-bottom: 8px; 
+}
+
+.intro-box ul li:last-child {
+    margin-bottom: 0;
 }
 
 .question-text {
