@@ -587,6 +587,7 @@ input[type="number"] {
     font-weight: 800;
     letter-spacing: -0.5px;
     line-height: 1.2;
+    text-align: center;
 }
 
 /* ─── Copyright Footer ─── */
