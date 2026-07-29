@@ -64,7 +64,7 @@
             <div id="tab-dashboard" class="tab-content active">
                 <header class="topbar">
                     <div class="header-titles">
-                        <h1 class="page-title">Dashboard SKM</h1>
+                        <h1 class="page-title">SURVEY KEPUASAN MASYARAKAT</h1>
                         <p class="page-subtitle">Pemantauan Indeks Kepuasan Masyarakat secara Real-Time</p>
                     </div>
                     <div class="header-actions">
@@ -180,53 +180,57 @@
             </div>
  
             <div class="modal-body">
-                
-                <div class="panduan-kalkulasi-premium" style="font-family: Arial, sans-serif; color: #334155; line-height: 1.6; font-size: 14px;">
-                    
-                    <div style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); padding: 15px; border-radius: 8px; border-left: 4px solid #1d4ed8; margin-bottom: 20px;">
-                        <h4 style="margin: 0 0 10px 0; color: #1e3a8a; font-size: 16px;">Dasar Perhitungan (Standar KemenPAN-RB)</h4>
-                        <p style="margin: 0;">Sistem ini menggunakan skala jawaban 1 sampai 4. Agar nilai ini bisa dipahami dalam persentase (skala 100), sistem secara otomatis mengalikan rata-rata jawaban dengan <strong>Angka Dasar 25</strong> (karena nilai maksimal 4 dikali 25 = 100).</p>
+                <div class="panduan-kalkulasi-premium" style="font-family: inherit; color: var(--text-main);">                    
+                    <div style="background: linear-gradient(135deg, var(--brand-primary) 0%, #3B82F6 100%); padding: 20px; border-radius: 12px; color: white; margin-bottom: 24px; box-shadow: var(--shadow-md);">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            <h4 style="margin: 0; font-size: 16px; font-weight: 800;">Standar Mutlak KemenPAN-RB</h4>
+                        </div>
+                        <p style="margin: 0; font-size: 13px; line-height: 1.6; opacity: 0.9;">Sistem secara cerdas mengumpulkan seluruh nilai jawaban yang valid (skala 1-4), mencari rata-rata murninya, lalu mengalikannya dengan <strong>Angka Dasar 25</strong> untuk menghasilkan Indeks presisi berskala 100.</p>
                     </div>
 
-                    
-                    <h4 style="color: #0f172a; margin-bottom: 10px; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">A. Cara Hitung 1 Orang Responden</h4>
-                    <p>Misalkan Bapak Budi mengisi survei dengan 9 pertanyaan, tetapi ada 1 pertanyaan yang terlewat (kosong). Sistem cerdas kita hanya akan menghitung 8 pertanyaan yang dijawab untuk menjaga keadilan pembagi.</p>
-                    <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                        <ul style="list-style-type: none; padding-left: 0; margin: 0;">
-                            <li style="margin-bottom: 8px;"><strong>1. Kumpulan Nilai Budi:</strong> 4, 3, 4, (Kosong), 3, 4, 3, 3, 4</li>
-                            <li style="margin-bottom: 8px;"><strong>2. Total Penjumlahan:</strong> 4+3+4+3+4+3+3+4 = <strong>28</strong></li>
-                            <li style="margin-bottom: 8px;"><strong>3. Nilai Rata-rata Dasar:</strong> 28 dibagi 8 (jumlah dijawab) = <strong>3.50</strong></li>
-                            <li><strong>4. Hasil Akhir (Indeks SKM Budi):</strong> 3.50 dikali 25 = <strong style="color: #047857; font-size: 16px;">87.50 (Sangat Baik)</strong></li>
-                        </ul>
-                    </div>
-                                    
-                    <h4 style="color: #0f172a; margin-bottom: 10px; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">B. Simulasi Kalkulasi Massal (Transparansi Mutlak)</h4>
-                    <p>Berikut adalah penjabaran hitungan matematis nyata dari seluruh pengunjung yang datanya sedang Anda lihat di layar saat ini:</p>
-                    <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                        <ul style="list-style-type: none; padding-left: 0; margin: 0;">
-                            <li style="margin-bottom: 8px;"><strong>1. Total Pengunjung:</strong> Saat ini terdapat <strong style="color: #1d4ed8;" id="simulasi-responden">0</strong> orang yang datanya terekam.</li>
-                            <li style="margin-bottom: 8px;"><strong>2. Kumpulan Poin Massal:</strong> Dari seluruh pengunjung tersebut, terkumpul total nilai sebanyak <strong id="simulasi-total-poin" style="color: #047857;">0</strong> poin, yang berasal dari <strong id="simulasi-total-pertanyaan">0</strong> pertanyaan sah (terjawab).</li>
-                            <li style="margin-bottom: 8px;"><strong>3. Rata-rata Dasar Massal:</strong> <span id="simulasi-total-poin-ulang">0</span> poin dibagi <span id="simulasi-total-pertanyaan-ulang">0</span> pertanyaan = menghasilkan angka dasar <strong id="simulasi-rata-dasar">0.00</strong>.</li>
-                            <li><strong>4. Konversi Akhir (Indeks):</strong> <span id="simulasi-rata-dasar-ulang">0.00</span> dikali angka standar 25 = <strong style="color: #047857; font-size: 16px;" id="simulasi-nilai-akhir">0.00</strong></li>
-                        </ul>
-                    </div>
-
-                    
-                    <h4 style="color: #0f172a; margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">C. Cara Hitung Nilai Rata-rata Per Unsur (Simulasi Data Nyata)</h4>
-                    <p>Nilai puluhan yang tampil pada tabel "Rekapitulasi per Unsur Pelayanan", dihitung menggunakan simulasi data yang sedang Anda lihat saat ini:</p>
-                    <div style="background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
-                        <ul style="list-style-type: none; padding-left: 0; margin: 0;">
-                            <li style="margin-bottom: 8px;"><strong>1. Total Penjawab:</strong> Misalnya kita mengambil data <strong id="simulasi-unsur-responden" style="color: #1d4ed8;">0</strong> pengunjung dari unsur Kecepatan Pelayanan.</li>
-                            <li style="margin-bottom: 8px;"><strong>2. Rata-rata Unsur:</strong> Jika semua nilai (1-4) dari pengunjung tersebut dijumlahkan, totalnya adalah <strong id="simulasi-unsur-jumlah">0</strong>. Maka <span id="simulasi-unsur-jumlah-ulang">0</span> &divide; <span id="simulasi-unsur-responden-ulang">0</span> = <strong id="simulasi-unsur-rata">0</strong>.</li>
-                            <li><strong>3. Hasil Tabel Akhir:</strong> Angka rata-rata tersebut dikonversi (dikali 25) = <strong style="color: #1d4ed8; font-size: 15px;" id="simulasi-unsur-akhir">0.00</strong>.</li>
-                        </ul>
+                    <div style="margin-bottom: 24px;">
+                        <h4 style="font-size: 15px; font-weight: 800; border-bottom: 2px solid var(--border-light); padding-bottom: 8px; margin-bottom: 12px; color: var(--brand-dark);">A. Simulasi Real-Time Keseluruhan MPP</h4>
+                        <div style="background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: 10px; padding: 16px; box-shadow: var(--shadow-sm);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px dashed var(--border-light); padding-bottom: 8px;">
+                                <span style="color: var(--text-muted); font-size: 13px; font-weight: 600;">1. Total Poin Terkumpul</span>
+                                <strong style="color: var(--brand-primary); font-size: 15px;" id="simulasi-total-poin">0</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px dashed var(--border-light); padding-bottom: 8px;">
+                                <span style="color: var(--text-muted); font-size: 13px; font-weight: 600;">2. Total Pertanyaan Terjawab Valid</span>
+                                <strong style="color: var(--brand-primary); font-size: 15px;" id="simulasi-total-pertanyaan">0</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px dashed var(--border-light); padding-bottom: 8px;">
+                                <span style="color: var(--text-muted); font-size: 13px; font-weight: 600;">3. Rata-rata Murni (Poin &divide; Pertanyaan)</span>
+                                <strong style="color: #D97706; font-size: 15px;" id="simulasi-rata-dasar">0.00</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; background: #F0FDF4; padding: 12px 16px; border-radius: 8px; border: 1px solid #BBF7D0;">
+                                <span style="color: #166534; font-size: 14px; font-weight: 800;">HASIL INDEKS (Rata-rata &times; 25)</span>
+                                <strong style="color: #047857; font-size: 22px; text-shadow: 0 2px 4px rgba(4,120,87,0.2);" id="simulasi-nilai-akhir">0.00</strong>
+                            </div>
+                        </div>
                     </div>
 
+                    <div>
+                        <h4 style="font-size: 15px; font-weight: 800; border-bottom: 2px solid var(--border-light); padding-bottom: 8px; margin-bottom: 12px; color: var(--brand-dark);">B. Simulasi Rincian Per Unsur</h4>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5;">Sistem menerapkan tingkat presisi yang sama untuk membedah unsur. Contoh kasus perhitungan riil pada Unsur 1 (Kesesuaian Persyaratan) dari data yang Anda lihat saat ini:</p>
+                        <div style="background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: 10px; padding: 16px; box-shadow: var(--shadow-sm);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px dashed var(--border-light); padding-bottom: 8px;">
+                                <span style="color: var(--text-muted); font-size: 13px; font-weight: 600;">Total Poin di Unsur Ini</span>
+                                <strong style="color: var(--brand-primary); font-size: 14px;" id="simulasi-unsur-jumlah">0</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px dashed var(--border-light); padding-bottom: 8px;">
+                                <span style="color: var(--text-muted); font-size: 13px; font-weight: 600;">Responden Menjawab Valid</span>
+                                <strong style="color: var(--brand-primary); font-size: 14px;" id="simulasi-unsur-responden">0</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; background: #EFF6FF; padding: 12px 16px; border-radius: 8px; border: 1px solid #BFDBFE;">
+                                <span style="color: #1E3A8A; font-size: 13px; font-weight: 800;">NILAI AKHIR UNSUR</span>
+                                <strong style="color: #1D4ED8; font-size: 18px;" id="simulasi-unsur-akhir">0.00</strong>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-            </div>           
-        </div>
-    </div>
+            </div>
 
     <script src="admin.js"></script>
     <script>
