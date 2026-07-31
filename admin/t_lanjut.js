@@ -55,11 +55,8 @@ function tarikDataServer() {
             if (d.status === 'sukses') {
                 dataGlobal = d.data;
                 kelompokkanDataPerGerai();
-            } else {
-                alert("Sesi kedaluwarsa. Silakan login kembali.");
             }
         })
-        .catch(() => alert("Koneksi jaringan terputus."));
 }
 
 function kelompokkanDataPerGerai() {
@@ -67,9 +64,16 @@ function kelompokkanDataPerGerai() {
     dataGlobal.forEach(r => {
         const arr = r['Nilai SKM'] ? String(r['Nilai SKM']).split(',').map(Number) : [];
         const lay = r['Layanan'] || 'Tidak Diketahui';
+        const saranMasuk = r['Saran & Masukan'] || r['Saran'] || '';
         
         if (!rekapGerai[lay]) {
-            rekapGerai[lay] = { tPoin: 0, tPert: 0, unsurPoin: Array(9).fill(0), unsurResponden: Array(9).fill(0) };
+            rekapGerai[lay] = { 
+                tPoin: 0, 
+                tPert: 0, 
+                unsurPoin: Array(9).fill(0), 
+                unsurResponden: Array(9).fill(0),
+                daftarSaran: []
+            };
         }
         
         let adaIsi = false;
@@ -85,6 +89,13 @@ function kelompokkanDataPerGerai() {
             const clean = arr.filter(n => !isNaN(n) && n > 0);
             rekapGerai[lay].tPoin += clean.reduce((a, b) => a + b, 0);
             rekapGerai[lay].tPert += clean.length;
+            
+            const teksBersih = saranMasuk.trim();
+            if (teksBersih.length > 3 && teksBersih.toLowerCase() !== 'tidak ada' && teksBersih.toLowerCase() !== '-') {
+                if (!rekapGerai[lay].daftarSaran.includes(teksBersih)) {
+                    rekapGerai[lay].daftarSaran.push(teksBersih);
+                }
+            }
         }
     });
 
@@ -101,11 +112,30 @@ function kelompokkanDataPerGerai() {
     });
 }
 
+function tentukanMutu(nilai) {
+    if (nilai >= 88.31) return { huruf: "A", teks: "Sangat Baik", warna: "#047857" };
+    if (nilai >= 76.61) return { huruf: "B", teks: "Baik", warna: "#0369A1" };
+    if (nilai >= 65.00) return { huruf: "C", teks: "Kurang Baik", warna: "#D97706" };
+    return { huruf: "D", teks: "Tidak Baik", warna: "#DC2626" };
+}
+
 function bangunLaporanDiLayar(namaGerai) {
     const area = document.getElementById('area-preview');
     const data = rekapGerai[namaGerai];
     let temuanHTML = '';
     let nomor = 1;
+
+    let blokSuaraWarga = '';
+    if (data.daftarSaran.length > 0) {
+        blokSuaraWarga = `<div style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed #94A3B8;">
+            <strong style="color: #0F172A; font-size: 11px;">Suara Warga:</strong>
+            <ul style="margin: 5px 0 0 15px; padding: 0; text-align: left; font-size: 11px; color: #475569;">`;
+        
+        data.daftarSaran.slice(0, 3).forEach(s => {
+            blokSuaraWarga += `<li style="margin-bottom: 4px; font-style: italic;">"${s}"</li>`;
+        });
+        blokSuaraWarga += `</ul></div>`;
+    }
 
     for (let i = 0; i < 9; i++) {
         if (data.unsurResponden[i] > 0) {
@@ -117,9 +147,12 @@ function bangunLaporanDiLayar(namaGerai) {
                         <td style="border: 1px solid #94A3B8; padding: 12px; text-align: center;">${nomor++}</td>
                         <td style="border: 1px solid #94A3B8; padding: 12px; font-weight: bold;">U${i+1} - ${namaUnsur[i]}</td>
                         <td style="border: 1px solid #94A3B8; padding: 12px; text-align: center; font-weight: bold; color: #DC2626;">${rata.toFixed(2)}</td>
-                        <td style="border: 1px solid #94A3B8; padding: 12px; text-align: justify;">${s.akar}</td>
-                        <td style="border: 1px solid #94A3B8; padding: 12px; font-weight: 600; color: #0F172A; text-align: justify;">${s.solusi}</td>
-                        <td style="border: 1px solid #94A3B8; padding: 12px; text-align: center;">${s.waktu}</td>
+                        <td style="border: 1px solid #94A3B8; padding: 12px; text-align: justify; vertical-align: top;">
+                            ${s.akar}
+                            ${blokSuaraWarga}
+                        </td>
+                        <td style="border: 1px solid #94A3B8; padding: 12px; font-weight: 600; color: #0F172A; text-align: justify; vertical-align: top;">${s.solusi}</td>
+                        <td style="border: 1px solid #94A3B8; padding: 12px; text-align: center; vertical-align: top;">${s.waktu}</td>
                     </tr>`;
             }
         }
@@ -129,7 +162,9 @@ function bangunLaporanDiLayar(namaGerai) {
         temuanHTML = `<tr><td colspan="6" style="border: 1px solid #94A3B8; padding: 20px; text-align: center; font-weight: bold; color: #16A34A;">Kinerja Sangat Baik! Tidak ada unsur yang memerlukan tindak lanjut prioritas.</td></tr>`;
     }
 
-    const nilaiAkhir = (data.tPoin / data.tPert) * 25;
+    const nilaiMurni = data.tPoin / data.tPert;
+    const nilaiAkhir = nilaiMurni * 25;
+    const mutu = tentukanMutu(nilaiAkhir);
     const tanggalCetak = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
     
     area.innerHTML = `
@@ -142,7 +177,9 @@ function bangunLaporanDiLayar(namaGerai) {
             <div style="display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 14px;">
                 <div>
                     <p style="margin: 5px 0;"><strong>Instansi Pelaksana :</strong> ${namaGerai}</p>
-                    <p style="margin: 5px 0;"><strong>Nilai IKM Gerai :</strong> <span style="font-size: 16px; font-weight: 800; color: #1E40AF;">${nilaiAkhir.toFixed(2)}</span></p>
+                    <p style="margin: 5px 0;"><strong>Mutu Pelayanan :</strong> <span style="font-size: 14px; font-weight: 800; color: ${mutu.warna};">${mutu.huruf} - ${mutu.teks}</span></p>
+                    <p style="margin: 5px 0;"><strong>Nilai Rata-rata Murni :</strong> <span style="font-size: 14px; font-weight: 700; color: #475569;">${nilaiMurni.toFixed(2)}</span> / 4.00</p>
+                    <p style="margin: 5px 0;"><strong>Nilai IKM Gerai :</strong> <span style="font-size: 16px; font-weight: 800; color: #1E40AF;">${nilaiAkhir.toFixed(2)}</span> / 100</p>
                 </div>
                 <div style="text-align: right;">
                     <p style="margin: 5px 0;"><strong>Tanggal Cetak :</strong> ${tanggalCetak}</p>
