@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tindak Lanjut SKM - MPP Luwu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="brand-area">
+                <div class="brand-text">
+                    <h2>SKM MPP</h2>
+                    <p>Kabupaten Luwu</p>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">Kembali ke Dashboard</a>
+                <a href="#" class="nav-item active">Cetak Tindak Lanjut</a>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <header class="topbar">
+                <div class="header-titles">
+                    <h1 class="page-title">LAPORAN TINDAK LANJUT</h1>
+                    <p class="page-subtitle">Mal Pelayanan Publik Kab. Luwu</p>
+                </div>
+            </header>
+
+            <div class="section" style="max-width: 100%; margin-top: 20px; background: #F8FAFC; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0;">
+                
+                <!-- Baris Atas: Pengaturan Periode -->
+                <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">NAMA PERIODE (UNTUK CETAK)</label>
+                        <input type="text" id="input-periode-tl" value="Triwulan I - 2026" placeholder="Misal: Triwulan I - 2026" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 14px; font-weight: 600; outline: none; background: #fff;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">DARI TANGGAL (FILTER DATA)</label>
+                        <input type="date" id="tgl-awal-tl" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 14px; outline: none; background: #fff;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">SAMPAI TANGGAL (FILTER DATA)</label>
+                        <input type="date" id="tgl-akhir-tl" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 14px; outline: none; background: #fff;">
+                    </div>
+                </div>
+
+                <!-- Baris Bawah: Pilihan Gerai -->
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <div style="flex: 1;">
+                        <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">PILIH INSTANSI / GERAI</label>
+                        <select id="pilih-gerai-tl" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 15px; font-weight: 600; outline: none;">
+                            <option value="">Memuat data...</option>
+                        </select>
+                    </div>
+                    <div style="padding-top: 26px;">
+                        <button id="btn-cetak-tl" style="background: #1E40AF; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s;" disabled>
+                            Simpan sebagai PDF
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="area-preview" style="display: none; margin-top: 30px; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); overflow-x: auto;">
+            </div>
+        </main>
+    </div>
+
+    <script src="t_lanjut.js"></script>
+</body>
+</html>
