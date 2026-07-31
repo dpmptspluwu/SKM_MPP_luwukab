@@ -282,7 +282,21 @@
                     </div>
                 </div>
             </div>
-
+			
+    <div id="modal-logout" class="modal-overlay">
+        <div class="modal-content" style="max-width: 350px; text-align: center; padding: 30px 20px;">
+            <div style="color: #EF4444; margin-bottom: 15px;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </div>
+            <h2 style="font-size: 20px; color: var(--brand-dark); margin-bottom: 10px;">Konfirmasi Keluar</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px;">Apakah Anda yakin ingin mengakhiri sesi dan keluar dari sistem?</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="tutupModalLogout()" style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; background: white; color: #475569; font-weight: 700; cursor: pointer;">Batal</button>
+                <button id="btn-konfirmasi-logout" style="flex: 1; padding: 12px; border-radius: 8px; border: none; background: #EF4444; color: white; font-weight: 700; cursor: pointer;">Ya, Keluar</button>
+            </div>
+        </div>
+    </div>
+			
     <script src="admin.js"></script>
 	<script src="t_lanjut.js"></script>
     <script>
