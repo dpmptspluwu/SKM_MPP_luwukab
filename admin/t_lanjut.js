@@ -150,8 +150,8 @@ function kelompokkanDataPerGerai() {
 function tentukanMutu(nilai) {
     if (nilai >= 88.31) return { huruf: "A", teks: "Sangat Baik", warna: "#047857" };
     if (nilai >= 76.61) return { huruf: "B", teks: "Baik", warna: "#0369A1" };
-    if (nilai >= 65.00) return { huruf: "C", teks: "Kurang Baik", warna: "#D97706" };
-    return { huruf: "D", teks: "Tidak Baik", warna: "#DC2626" };
+    if (nilai >= 65.00) return { huruf: "C", teks: "Cukup Baik", warna: "#D97706" };
+    return { huruf: "D", teks: "Kurang Baik", warna: "#DC2626" };
 }
 
 function bangunLaporanDiLayar(namaGerai) {
