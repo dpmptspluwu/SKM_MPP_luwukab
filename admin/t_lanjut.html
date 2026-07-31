@@ -26,23 +26,44 @@
         <main class="main-content">
             <header class="topbar">
                 <div class="header-titles">
-                    <h1 class="page-title">Tindak Lanjut</h1>
-                    <p class="page-subtitle">Sistem Monitoring Tindak Lanjut Dinamis</p>
+                    <h1 class="page-title">Tindak Lanjut Cerdas</h1>
+                    <p class="page-subtitle">Sistem otomatis perumus evaluasi pelayanan izin non-berusaha</p>
                 </div>
             </header>
 
-            <div class="section" style="max-width: 100%; margin-top: 20px; display: flex; gap: 15px; align-items: center; background: #F8FAFC; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0;">
-                <div style="flex: 1;">
-                    <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">PILIH INSTANSI / GERAI</label>
-                    <select id="pilih-gerai-tl" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 15px; font-weight: 600; outline: none;">
-                        <option value="">Memuat data...</option>
-                    </select>
+            <div class="section" style="max-width: 100%; margin-top: 20px; background: #F8FAFC; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0;">
+                
+                <!-- Baris Atas: Pengaturan Periode -->
+                <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">NAMA PERIODE (UNTUK CETAK)</label>
+                        <input type="text" id="input-periode-tl" value="Triwulan I - 2026" placeholder="Misal: Triwulan I - 2026" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 14px; font-weight: 600; outline: none; background: #fff;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">DARI TANGGAL (FILTER DATA)</label>
+                        <input type="date" id="tgl-awal-tl" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 14px; outline: none; background: #fff;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">SAMPAI TANGGAL (FILTER DATA)</label>
+                        <input type="date" id="tgl-akhir-tl" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 14px; outline: none; background: #fff;">
+                    </div>
                 </div>
-                <div style="padding-top: 26px;">
-                    <button id="btn-cetak-tl" style="background: #1E40AF; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s;" disabled>
-                        Simpan sebagai PDF
-                    </button>
+
+                <!-- Baris Bawah: Pilihan Gerai -->
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <div style="flex: 1;">
+                        <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">PILIH INSTANSI / GERAI</label>
+                        <select id="pilih-gerai-tl" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 15px; font-weight: 600; outline: none;">
+                            <option value="">Memuat data...</option>
+                        </select>
+                    </div>
+                    <div style="padding-top: 26px;">
+                        <button id="btn-cetak-tl" style="background: #1E40AF; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s;" disabled>
+                            Simpan sebagai PDF
+                        </button>
+                    </div>
                 </div>
+
             </div>
 
             <div id="area-preview" style="display: none; margin-top: 30px; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); overflow-x: auto;">
