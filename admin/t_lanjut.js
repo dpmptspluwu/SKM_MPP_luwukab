@@ -244,6 +244,11 @@ function bangunLaporanDiLayar(namaGerai) {
                 </tbody>
             </table>
 
+            <!-- =========================================================
+                 BAGIAN TANDA TANGAN DISEMBUNYIKAN SEMENTARA
+                 Hapus tanda panah pembuka dan penutup ini untuk mengaktifkan
+                 ========================================================= -->
+            <!-- 
             <div style="display: flex; justify-content: flex-end; margin-top: 50px;">
                 <div style="text-align: center; width: 250px;">
                     <p style="margin-bottom: 80px; font-size: 14px;">Mengetahui,<br>Kepala DPMPTSP Kabupaten Luwu</p>
@@ -251,6 +256,7 @@ function bangunLaporanDiLayar(namaGerai) {
                     <p style="margin: 0; font-size: 12px;">NIP. .........................................</p>
                 </div>
             </div>
+            -->
         </div>
     `;
     
