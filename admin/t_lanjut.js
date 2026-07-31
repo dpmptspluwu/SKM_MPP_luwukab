@@ -26,14 +26,22 @@ document.addEventListener('DOMContentLoaded', () => {
     tarikDataServer();
     
     document.getElementById('pilih-gerai-tl').addEventListener('change', function() {
-        const gerai = this.value;
-        if(gerai) {
-            bangunLaporanDiLayar(gerai);
+        if(this.value) {
+            bangunLaporanDiLayar(this.value);
         } else {
             document.getElementById('area-preview').style.display = 'none';
             document.getElementById('btn-cetak-tl').disabled = true;
         }
     });
+
+    document.getElementById('input-periode-tl').addEventListener('input', function() {
+        const geraiAktif = document.getElementById('pilih-gerai-tl').value;
+        if(geraiAktif) bangunLaporanDiLayar(geraiAktif);
+    });
+
+    // Pemicu jika filter tanggal diubah, hitung ulang semua
+    document.getElementById('tgl-awal-tl').addEventListener('change', kelompokkanDataPerGerai);
+    document.getElementById('tgl-akhir-tl').addEventListener('change', kelompokkanDataPerGerai);
 
     document.getElementById('btn-cetak-tl').addEventListener('click', () => {
         const gerai = document.getElementById('pilih-gerai-tl').value;
@@ -43,11 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function tarikDataServer() {
     const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) {
-        alert("Sesi tidak ditemukan. Harap login melalui halaman Dashboard Utama.");
-        window.location.href = 'admin.html';
-        return;
-    }
+    if (!token) return window.location.href = 'admin.html';
 
     fetch(scriptURL + '?action=data&token=' + encodeURIComponent(token))
         .then(r => r.json())
@@ -61,7 +65,33 @@ function tarikDataServer() {
 
 function kelompokkanDataPerGerai() {
     rekapGerai = {};
-    dataGlobal.forEach(r => {
+    const tglAwal = document.getElementById('tgl-awal-tl').value;
+    const tglAkhir = document.getElementById('tgl-akhir-tl').value;
+
+    // Logika Pemotong Data Berdasarkan Tanggal
+    const dataTerfilter = dataGlobal.filter(r => {
+        const kolomWaktu = r['Timestamp'] || r['Waktu'] || r['waktu'] || r['Tanggal'] || '';
+        if (!kolomWaktu) return true; // Jika data tidak punya kolom waktu, biarkan lolos
+        
+        const tanggalSurvey = new Date(kolomWaktu);
+        if (isNaN(tanggalSurvey.getTime())) return true; // Jika format waktu rusak, biarkan lolos
+
+        if (tglAwal) {
+            const batasAwal = new Date(tglAwal);
+            batasAwal.setHours(0, 0, 0, 0);
+            if (tanggalSurvey < batasAwal) return false; // Buang data yang terlalu lama
+        }
+        
+        if (tglAkhir) {
+            const batasAkhir = new Date(tglAkhir);
+            batasAkhir.setHours(23, 59, 59, 999);
+            if (tanggalSurvey > batasAkhir) return false; // Buang data yang terlalu baru
+        }
+        
+        return true; // Data lolos seleksi kalender
+    });
+
+    dataTerfilter.forEach(r => {
         const arr = r['Nilai SKM'] ? String(r['Nilai SKM']).split(',').map(Number) : [];
         const lay = r['Layanan'] || 'Tidak Diketahui';
         const saranMasuk = r['Saran & Masukan'] || r['Saran'] || '';
@@ -99,6 +129,7 @@ function kelompokkanDataPerGerai() {
         }
     });
 
+    // Perbarui daftar gerai di dropdown hanya dengan gerai yang punya data di periode tersebut
     const select = document.getElementById('pilih-gerai-tl');
     select.innerHTML = '<option value="">-- Pilih Instansi / Gerai --</option>';
     
@@ -110,6 +141,10 @@ function kelompokkanDataPerGerai() {
             select.appendChild(opt);
         }
     });
+
+    // Sembunyikan laporan lama jika tanggal berubah
+    document.getElementById('area-preview').style.display = 'none';
+    document.getElementById('btn-cetak-tl').disabled = true;
 }
 
 function tentukanMutu(nilai) {
@@ -122,8 +157,14 @@ function tentukanMutu(nilai) {
 function bangunLaporanDiLayar(namaGerai) {
     const area = document.getElementById('area-preview');
     const data = rekapGerai[namaGerai];
+    
+    // Cegah error jika gerai kosong di periode tersebut
+    if (!data || data.tPert === 0) return;
+
     let temuanHTML = '';
     let nomor = 1;
+
+    const periodeInput = document.getElementById('input-periode-tl').value || 'Tidak Ditentukan';
 
     let blokSuaraWarga = '';
     if (data.daftarSaran.length > 0) {
@@ -159,7 +200,7 @@ function bangunLaporanDiLayar(namaGerai) {
     }
 
     if (!temuanHTML) {
-        temuanHTML = `<tr><td colspan="6" style="border: 1px solid #94A3B8; padding: 20px; text-align: center; font-weight: bold; color: #16A34A;">Kinerja Sangat Baik! Tidak ada unsur yang memerlukan tindak lanjut prioritas.</td></tr>`;
+        temuanHTML = `<tr><td colspan="6" style="border: 1px solid #94A3B8; padding: 20px; text-align: center; font-weight: bold; color: #16A34A;">Kinerja Sangat Baik! Tidak ada unsur yang memerlukan tindak lanjut prioritas pada periode ini.</td></tr>`;
     }
 
     const nilaiMurni = data.tPoin / data.tPert;
@@ -177,6 +218,7 @@ function bangunLaporanDiLayar(namaGerai) {
             <div style="display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 14px;">
                 <div>
                     <p style="margin: 5px 0;"><strong>Instansi Pelaksana :</strong> ${namaGerai}</p>
+                    <p style="margin: 5px 0;"><strong>Periode Evaluasi :</strong> <span style="font-weight: 700;">${periodeInput}</span></p>
                     <p style="margin: 5px 0;"><strong>Mutu Pelayanan :</strong> <span style="font-size: 14px; font-weight: 800; color: ${mutu.warna};">${mutu.huruf} - ${mutu.teks}</span></p>
                     <p style="margin: 5px 0;"><strong>Nilai Rata-rata Murni :</strong> <span style="font-size: 14px; font-weight: 700; color: #475569;">${nilaiMurni.toFixed(2)}</span> / 4.00</p>
                     <p style="margin: 5px 0;"><strong>Nilai IKM Gerai :</strong> <span style="font-size: 16px; font-weight: 800; color: #1E40AF;">${nilaiAkhir.toFixed(2)}</span> / 100</p>
