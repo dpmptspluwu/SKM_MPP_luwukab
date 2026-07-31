@@ -50,10 +50,10 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
                     Laporan Tahunan
                 </a>
-				<a href="t_lanjut/index.html" class="nav-item">
-			        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-			        Cetak Tindak Lanjut
-			    </a>
+				<a href="#" class="nav-item" data-tab="tindak-lanjut">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+					Cetak Tindak Lanjut
+				</a>
 			</nav>
             <div class="sidebar-footer">
                 <p style="line-height: 1.4;">
@@ -173,6 +173,49 @@
                 <div class="section"><div class="section-title">Perbandingan IKM per Gerai</div><div class="chart-box-laporan pendek"><canvas id="chartGerai"></canvas></div></div>
                 <div class="section"><div class="section-title">Rekapitulasi per Unsur Pelayanan</div><table class="unsur-table"><thead><tr><th>No</th><th>Unsur Pelayanan</th><th>Nilai Rata-rata</th><th>Mutu</th></tr></thead><tbody id="lp-unsur-body"></tbody><tfoot id="lp-unsur-footer"></tfoot></table></div>
             </div>
+			
+			<!-- TAB 3: TINDAK LANJUT -->
+            <div id="tab-tindak-lanjut" class="tab-content">
+                <header class="topbar">
+                    <div class="header-titles">
+                        <h1 class="page-title">LAPORAN TINDAK LANJUT</h1>
+                        <p class="page-subtitle">Sistem otomatis perumus evaluasi pelayanan izin non-berusaha</p>
+                    </div>
+                </header>
+
+                <div class="section" style="max-width: 100%; margin-top: 20px; background: #F8FAFC; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0;">
+                    <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">NAMA PERIODE (UNTUK CETAK)</label>
+                            <input type="text" id="input-periode-tl" value="Triwulan I - 2026" placeholder="Misal: Triwulan I - 2026" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 14px; font-weight: 600; outline: none; background: #fff;">
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">DARI TANGGAL (FILTER DATA)</label>
+                            <input type="date" id="tgl-awal-tl" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 14px; outline: none; background: #fff;">
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">SAMPAI TANGGAL (FILTER DATA)</label>
+                            <input type="date" id="tgl-akhir-tl" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 14px; outline: none; background: #fff;">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">PILIH INSTANSI / GERAI</label>
+                            <select id="pilih-gerai-tl" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 15px; font-weight: 600; outline: none;">
+                                <option value="">Memuat data...</option>
+                            </select>
+                        </div>
+                        <div style="padding-top: 26px;">
+                            <button id="btn-cetak-tl" style="background: #1E40AF; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s;" disabled>
+                                Simpan sebagai PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="area-preview" style="display: none; margin-top: 30px; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); overflow-x: auto;"></div>
+            </div>
+			
         </main>
     </div>
     
@@ -241,6 +284,7 @@
             </div>
 
     <script src="admin.js"></script>
+	<script src="t_lanjut.js"></script>
     <script>
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = e => {
