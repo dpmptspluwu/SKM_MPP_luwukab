@@ -1,14 +1,4 @@
-const scriptURL = 'https://script.google.com/macros/s/AKfycbzF4rwH5n9TZPdj_Li56nOSqs8YROXTiTeU3oxA934Fyk1H46ZJEIZmBalvIc2dQ0jA/exec';
-const TOKEN_KEY = 'admin_token';
-
-let dataGlobal = [];
-let rekapGerai = {};
-
-const namaUnsur = [
-    "Kesesuaian persyaratan", "Kemudahan prosedur", "Kecepatan waktu",
-    "Kewajaran biaya", "Kesesuaian produk", "Kompetensi pelaksana",
-    "Perilaku pelaksana", "Penanganan pengaduan", "Kualitas sarana"
-];
+let rekapGeraiTL = {};
 
 const kamusSolusi = {
     0: { akar: "Pemohon belum sepenuhnya memahami rincian syarat spesifik jenis izin.", solusi: "Membuat dan menempelkan checklist kelengkapan berkas di area loket pendaftaran.", waktu: "1 Minggu" },
@@ -23,11 +13,19 @@ const kamusSolusi = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    tarikDataServer();
-    
+    // KECERDASAN SINKRONISASI: Saat Tab Tindak Lanjut diklik, ia akan menggunakan 'dataGlobal' yang sudah ditarik oleh admin.js
+    const tabNavTL = document.querySelector('.nav-item[data-tab="tindak-lanjut"]');
+    if(tabNavTL) {
+        tabNavTL.addEventListener('click', () => {
+            if(typeof dataGlobal !== 'undefined' && dataGlobal.length > 0) {
+                kelompokkanDataPerGeraiTL();
+            }
+        });
+    }
+
     document.getElementById('pilih-gerai-tl').addEventListener('change', function() {
         if(this.value) {
-            bangunLaporanDiLayar(this.value);
+            bangunLaporanDiLayarTL(this.value);
         } else {
             document.getElementById('area-preview').style.display = 'none';
             document.getElementById('btn-cetak-tl').disabled = true;
@@ -36,59 +34,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('input-periode-tl').addEventListener('input', function() {
         const geraiAktif = document.getElementById('pilih-gerai-tl').value;
-        if(geraiAktif) bangunLaporanDiLayar(geraiAktif);
+        if(geraiAktif) bangunLaporanDiLayarTL(geraiAktif);
     });
 
-    // Pemicu jika filter tanggal diubah, hitung ulang semua
-    document.getElementById('tgl-awal-tl').addEventListener('change', kelompokkanDataPerGerai);
-    document.getElementById('tgl-akhir-tl').addEventListener('change', kelompokkanDataPerGerai);
+    document.getElementById('tgl-awal-tl').addEventListener('change', kelompokkanDataPerGeraiTL);
+    document.getElementById('tgl-akhir-tl').addEventListener('change', kelompokkanDataPerGeraiTL);
 
     document.getElementById('btn-cetak-tl').addEventListener('click', () => {
         const gerai = document.getElementById('pilih-gerai-tl').value;
-        cetakPDF(gerai);
+        cetakPDFTL(gerai);
     });
 });
 
-function tarikDataServer() {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) return window.location.href = 'admin.html';
-
-    fetch(scriptURL + '?action=data&token=' + encodeURIComponent(token))
-        .then(r => r.json())
-        .then(d => {
-            if (d.status === 'sukses') {
-                dataGlobal = d.data;
-                kelompokkanDataPerGerai();
-            }
-        })
-}
-
-function kelompokkanDataPerGerai() {
-    rekapGerai = {};
+function kelompokkanDataPerGeraiTL() {
+    rekapGeraiTL = {};
     const tglAwal = document.getElementById('tgl-awal-tl').value;
     const tglAkhir = document.getElementById('tgl-akhir-tl').value;
 
-    // Logika Pemotong Data Berdasarkan Tanggal
     const dataTerfilter = dataGlobal.filter(r => {
         const kolomWaktu = r['Timestamp'] || r['Waktu'] || r['waktu'] || r['Tanggal'] || '';
-        if (!kolomWaktu) return true; // Jika data tidak punya kolom waktu, biarkan lolos
+        if (!kolomWaktu) return true; 
         
         const tanggalSurvey = new Date(kolomWaktu);
-        if (isNaN(tanggalSurvey.getTime())) return true; // Jika format waktu rusak, biarkan lolos
+        if (isNaN(tanggalSurvey.getTime())) return true; 
 
         if (tglAwal) {
             const batasAwal = new Date(tglAwal);
             batasAwal.setHours(0, 0, 0, 0);
-            if (tanggalSurvey < batasAwal) return false; // Buang data yang terlalu lama
+            if (tanggalSurvey < batasAwal) return false; 
         }
         
         if (tglAkhir) {
             const batasAkhir = new Date(tglAkhir);
             batasAkhir.setHours(23, 59, 59, 999);
-            if (tanggalSurvey > batasAkhir) return false; // Buang data yang terlalu baru
+            if (tanggalSurvey > batasAkhir) return false; 
         }
         
-        return true; // Data lolos seleksi kalender
+        return true; 
     });
 
     dataTerfilter.forEach(r => {
@@ -96,8 +78,8 @@ function kelompokkanDataPerGerai() {
         const lay = r['Layanan'] || 'Tidak Diketahui';
         const saranMasuk = r['Saran & Masukan'] || r['Saran'] || '';
         
-        if (!rekapGerai[lay]) {
-            rekapGerai[lay] = { 
+        if (!rekapGeraiTL[lay]) {
+            rekapGeraiTL[lay] = { 
                 tPoin: 0, 
                 tPert: 0, 
                 unsurPoin: Array(9).fill(0), 
@@ -109,32 +91,31 @@ function kelompokkanDataPerGerai() {
         let adaIsi = false;
         arr.forEach((v, i) => {
             if (i < 9 && !isNaN(v) && v > 0) {
-                rekapGerai[lay].unsurPoin[i] += v;
-                rekapGerai[lay].unsurResponden[i]++;
+                rekapGeraiTL[lay].unsurPoin[i] += v;
+                rekapGeraiTL[lay].unsurResponden[i]++;
                 adaIsi = true;
             }
         });
         
         if(adaIsi) {
             const clean = arr.filter(n => !isNaN(n) && n > 0);
-            rekapGerai[lay].tPoin += clean.reduce((a, b) => a + b, 0);
-            rekapGerai[lay].tPert += clean.length;
+            rekapGeraiTL[lay].tPoin += clean.reduce((a, b) => a + b, 0);
+            rekapGeraiTL[lay].tPert += clean.length;
             
             const teksBersih = saranMasuk.trim();
             if (teksBersih.length > 3 && teksBersih.toLowerCase() !== 'tidak ada' && teksBersih.toLowerCase() !== '-') {
-                if (!rekapGerai[lay].daftarSaran.includes(teksBersih)) {
-                    rekapGerai[lay].daftarSaran.push(teksBersih);
+                if (!rekapGeraiTL[lay].daftarSaran.includes(teksBersih)) {
+                    rekapGeraiTL[lay].daftarSaran.push(teksBersih);
                 }
             }
         }
     });
 
-    // Perbarui daftar gerai di dropdown hanya dengan gerai yang punya data di periode tersebut
     const select = document.getElementById('pilih-gerai-tl');
     select.innerHTML = '<option value="">-- Pilih Instansi / Gerai --</option>';
     
-    Object.keys(rekapGerai).sort().forEach(gerai => {
-        if(rekapGerai[gerai].tPert > 0) {
+    Object.keys(rekapGeraiTL).sort().forEach(gerai => {
+        if(rekapGeraiTL[gerai].tPert > 0) {
             const opt = document.createElement('option');
             opt.value = gerai;
             opt.textContent = gerai;
@@ -142,23 +123,21 @@ function kelompokkanDataPerGerai() {
         }
     });
 
-    // Sembunyikan laporan lama jika tanggal berubah
     document.getElementById('area-preview').style.display = 'none';
     document.getElementById('btn-cetak-tl').disabled = true;
 }
 
-function tentukanMutu(nilai) {
+function tentukanMutuTL(nilai) {
     if (nilai >= 88.31) return { huruf: "A", teks: "Sangat Baik", warna: "#047857" };
     if (nilai >= 76.61) return { huruf: "B", teks: "Baik", warna: "#0369A1" };
     if (nilai >= 65.00) return { huruf: "C", teks: "Cukup Baik", warna: "#D97706" };
     return { huruf: "D", teks: "Kurang Baik", warna: "#DC2626" };
 }
 
-function bangunLaporanDiLayar(namaGerai) {
+function bangunLaporanDiLayarTL(namaGerai) {
     const area = document.getElementById('area-preview');
-    const data = rekapGerai[namaGerai];
+    const data = rekapGeraiTL[namaGerai];
     
-    // Cegah error jika gerai kosong di periode tersebut
     if (!data || data.tPert === 0) return;
 
     let temuanHTML = '';
@@ -183,6 +162,7 @@ function bangunLaporanDiLayar(namaGerai) {
             const rata = data.unsurPoin[i] / data.unsurResponden[i];
             if (rata < 3.00) {
                 const s = kamusSolusi[i];
+                // Variabel namaUnsur ditarik langsung dari admin.js
                 temuanHTML += `
                     <tr style="page-break-inside: avoid;">
                         <td style="border: 1px solid #94A3B8; padding: 12px; text-align: center;">${nomor++}</td>
@@ -205,11 +185,11 @@ function bangunLaporanDiLayar(namaGerai) {
 
     const nilaiMurni = data.tPoin / data.tPert;
     const nilaiAkhir = nilaiMurni * 25;
-    const mutu = tentukanMutu(nilaiAkhir);
+    const mutu = tentukanMutuTL(nilaiAkhir);
     const tanggalCetak = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
     
     area.innerHTML = `
-        <div id="dokumen-cetak" style="font-family: Arial, sans-serif; color: #000; background: #fff; padding: 10px;">
+        <div id="dokumen-cetak-tl" style="font-family: Arial, sans-serif; color: #000; background: #fff; padding: 10px;">
             <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #1E40AF; padding-bottom: 20px;">
                 <h2 style="margin: 0; font-size: 22px; text-transform: uppercase; font-weight: 800;">RENCANA TINDAK LANJUT EVALUASI SKM</h2>
                 <h3 style="margin: 8px 0 0; font-size: 16px; font-weight: 600; color: #334155;">MAL PELAYANAN PUBLIK KABUPATEN LUWU</h3>
@@ -243,11 +223,6 @@ function bangunLaporanDiLayar(namaGerai) {
                     ${temuanHTML}
                 </tbody>
             </table>
-
-            <!-- =========================================================
-                 BAGIAN TANDA TANGAN DISEMBUNYIKAN SEMENTARA
-                 Hapus tanda panah pembuka dan penutup ini untuk mengaktifkan
-                 ========================================================= -->
             <!-- 
             <div style="display: flex; justify-content: flex-end; margin-top: 50px;">
                 <div style="text-align: center; width: 250px;">
@@ -264,8 +239,8 @@ function bangunLaporanDiLayar(namaGerai) {
     document.getElementById('btn-cetak-tl').disabled = false;
 }
 
-function cetakPDF(namaGerai) {
-    const elemenDokumen = document.getElementById('dokumen-cetak');
+function cetakPDFTL(namaGerai) {
+    const elemenDokumen = document.getElementById('dokumen-cetak-tl');
     
     html2pdf().from(elemenDokumen).set({
         margin: 10,
@@ -275,22 +250,3 @@ function cetakPDF(namaGerai) {
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
     }).save();
 }
-
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-});
-
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'F12') {
-        e.preventDefault();
-    }
-    if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
-        e.preventDefault();
-    }
-    if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) {
-        e.preventDefault();
-    }
-    if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) {
-        e.preventDefault();
-    }
-});
