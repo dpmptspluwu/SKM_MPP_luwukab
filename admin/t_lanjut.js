@@ -13,7 +13,6 @@ const kamusSolusi = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    // KECERDASAN SINKRONISASI: Saat Tab Tindak Lanjut diklik, ia akan menggunakan 'dataGlobal' yang sudah ditarik oleh admin.js
     const tabNavTL = document.querySelector('.nav-item[data-tab="tindak-lanjut"]');
     if(tabNavTL) {
         tabNavTL.addEventListener('click', () => {
@@ -23,27 +22,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    document.getElementById('pilih-gerai-tl').addEventListener('change', function() {
-        if(this.value) {
-            bangunLaporanDiLayarTL(this.value);
-        } else {
-            document.getElementById('area-preview').style.display = 'none';
-            document.getElementById('btn-cetak-tl').disabled = true;
-        }
-    });
+    const selectGerai = document.getElementById('pilih-gerai-tl');
+    if(selectGerai) {
+        selectGerai.addEventListener('change', function() {
+            if(this.value) {
+                bangunLaporanDiLayarTL(this.value);
+            } else {
+                document.getElementById('area-preview').style.display = 'none';
+                document.getElementById('btn-cetak-tl').disabled = true;
+            }
+        });
+    }
 
-    document.getElementById('input-periode-tl').addEventListener('input', function() {
-        const geraiAktif = document.getElementById('pilih-gerai-tl').value;
-        if(geraiAktif) bangunLaporanDiLayarTL(geraiAktif);
-    });
+    const inputPeriode = document.getElementById('input-periode-tl');
+    if(inputPeriode) {
+        inputPeriode.addEventListener('input', function() {
+            const geraiAktif = document.getElementById('pilih-gerai-tl').value;
+            if(geraiAktif) bangunLaporanDiLayarTL(geraiAktif);
+        });
+    }
 
-    document.getElementById('tgl-awal-tl').addEventListener('change', kelompokkanDataPerGeraiTL);
-    document.getElementById('tgl-akhir-tl').addEventListener('change', kelompokkanDataPerGeraiTL);
+    const tglAwal = document.getElementById('tgl-awal-tl');
+    const tglAkhir = document.getElementById('tgl-akhir-tl');
+    if(tglAwal) tglAwal.addEventListener('change', kelompokkanDataPerGeraiTL);
+    if(tglAkhir) tglAkhir.addEventListener('change', kelompokkanDataPerGeraiTL);
 
-    document.getElementById('btn-cetak-tl').addEventListener('click', () => {
-        const gerai = document.getElementById('pilih-gerai-tl').value;
-        cetakPDFTL(gerai);
-    });
+    const btnCetak = document.getElementById('btn-cetak-tl');
+    if(btnCetak) {
+        btnCetak.addEventListener('click', () => {
+            const gerai = document.getElementById('pilih-gerai-tl').value;
+            cetakPDFTL(gerai);
+        });
+    }
 });
 
 function kelompokkanDataPerGeraiTL() {
@@ -112,19 +122,22 @@ function kelompokkanDataPerGeraiTL() {
     });
 
     const select = document.getElementById('pilih-gerai-tl');
-    select.innerHTML = '<option value="">-- Pilih Instansi / Gerai --</option>';
-    
-    Object.keys(rekapGeraiTL).sort().forEach(gerai => {
-        if(rekapGeraiTL[gerai].tPert > 0) {
-            const opt = document.createElement('option');
-            opt.value = gerai;
-            opt.textContent = gerai;
-            select.appendChild(opt);
-        }
-    });
+    if(select) {
+        select.innerHTML = '<option value="">-- Pilih Instansi / Gerai --</option>';
+        Object.keys(rekapGeraiTL).sort().forEach(gerai => {
+            if(rekapGeraiTL[gerai].tPert > 0) {
+                const opt = document.createElement('option');
+                opt.value = gerai;
+                opt.textContent = gerai;
+                select.appendChild(opt);
+            }
+        });
+    }
 
-    document.getElementById('area-preview').style.display = 'none';
-    document.getElementById('btn-cetak-tl').disabled = true;
+    const areaPreview = document.getElementById('area-preview');
+    if(areaPreview) areaPreview.style.display = 'none';
+    const btnCetak = document.getElementById('btn-cetak-tl');
+    if(btnCetak) btnCetak.disabled = true;
 }
 
 function tentukanMutuTL(nilai) {
@@ -162,7 +175,6 @@ function bangunLaporanDiLayarTL(namaGerai) {
             const rata = data.unsurPoin[i] / data.unsurResponden[i];
             if (rata < 3.00) {
                 const s = kamusSolusi[i];
-                // Variabel namaUnsur ditarik langsung dari admin.js
                 temuanHTML += `
                     <tr style="page-break-inside: avoid;">
                         <td style="border: 1px solid #94A3B8; padding: 12px; text-align: center;">${nomor++}</td>
@@ -223,15 +235,6 @@ function bangunLaporanDiLayarTL(namaGerai) {
                     ${temuanHTML}
                 </tbody>
             </table>
-            <!-- 
-            <div style="display: flex; justify-content: flex-end; margin-top: 50px;">
-                <div style="text-align: center; width: 250px;">
-                    <p style="margin-bottom: 80px; font-size: 14px;">Mengetahui,<br>Kepala DPMPTSP Kabupaten Luwu</p>
-                    <p style="margin: 0; font-weight: bold; text-decoration: underline; font-size: 14px;">( ......................................... )</p>
-                    <p style="margin: 0; font-size: 12px;">NIP. .........................................</p>
-                </div>
-            </div>
-            -->
         </div>
     `;
     
